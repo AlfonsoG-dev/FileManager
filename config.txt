@@ -1,0 +1,8 @@
+Root-Path: src
+Source-Path: src\application
+Class-Path: bin
+Main-Class: FileManager
+Test-Path:  src\test
+Test-Class: test.TestLauncher
+Libraries: 
+Compile-Flags: -Werror -Xlint:all -Xdiags:verbose -g
