@@ -30,19 +30,18 @@ public class FileUtils {
      * @return the name of the given path
      */
     public String getLocalName(String localPath) {
-        String 
-            n = "",
-            p = "";
         try {
             File local = new File(localPath);
+            String n = "", p = "";
             if(local.exists()) {
                 p = local.getCanonicalPath(); 
                 n = new File(p).getName();
             }
+            return n;
         } catch(IOException e) {
             e.printStackTrace();
+            return null;
         }
-        return n;
     }
     /**
      * ayuda a generar la ruta de los elementos del directorio
@@ -222,7 +221,7 @@ public class FileUtils {
             );
         }
     }
-    private void addZipFileConcurrent(File source, String base, ZipOutputStream zop) {
+    private void addZipFile(File source, String base, ZipOutputStream zop) {
         FileInputStream fileInput = null;
         try {
             fileInput = new FileInputStream(source);
@@ -294,7 +293,7 @@ public class FileUtils {
 
             }
         } else {
-            addZipFileConcurrent(
+            addZipFile(
                 source,
                 base,
                 zop
