@@ -13,15 +13,15 @@ public class OptionVerification {
     // empty constructor
     public OptionVerification() { }
     /**
-     * verifica si existe asignación
-     * @return true si existe, false de lo contrario
+     * verify if assign exists
+     * @return true if exists, false otherwise
      */
     public boolean verifyAssign() {
         boolean res = false;
         for(int j=0; j<options.length; ++j) {
             int assignation = options[j].indexOf("to");
-            int permision = options[j].indexOf("--y");
-            if(assignation != -1 || permision != -1) {
+            int permission = options[j].indexOf("--y");
+            if(assignation != -1 || permission != -1) {
                 res = true;
             }
         }
@@ -42,7 +42,7 @@ public class OptionVerification {
         return isReplaceable;
     }
     /**
-     * da el indice de la asignacion
+     * Get the assign index.
      */
     public int getAssignIndex() {
         int  res = -1;
@@ -70,10 +70,6 @@ public class OptionVerification {
         }
         return res;
     }
-    /**
-     * verifica si se asigna el archivo
-     * @return el archivo
-     */
     public String verifyFirstFile(int i) {
         String res = "";
         boolean 
@@ -84,10 +80,6 @@ public class OptionVerification {
         }
         return res;
     }
-    /**
-     * verifica si se asigna otro archivo
-     * @return el archivo
-     */
     public String verifySecondFile() {
         String res = "";
         if((getAssignIndex()+1) < options.length) {

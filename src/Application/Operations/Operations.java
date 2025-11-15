@@ -3,23 +3,11 @@ package Application.Operations;
 import Application.Utils.OperationUtils;
 
 import java.io.File;
-/**
- * clase que se encarga de organizar las opciones según la operacion
- */
-public class Operaciones {
-    /**
-     * las operaciones a realizar
-     */
+public class Operations {
     private OperationUtils op;
-    /**
-     * constructor
-     */
-    public Operaciones() {
+    public Operations() {
         op = null;
     }
-    /**
-     * organiza las operaciones según la opcion designada en CLI
-     */
     public void organizeOptions(String[] args) {
         try {
             outter:for(int i=0; i<args.length; ++i) {
@@ -105,7 +93,7 @@ public class Operaciones {
                         System.out.println("\tuse -df to delete a file(s) of folder(s)");
                         break;
                     default: 
-                        System.out.println("utiliza --h para mas informacion");
+                        System.out.println("Use --h to see the commands");
                         break outter;
                 }
             }

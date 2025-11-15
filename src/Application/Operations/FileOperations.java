@@ -13,39 +13,20 @@ import Application.Utils.TextUtils;
 import Application.Utils.Colors;
 
 public class FileOperations {
-    /**
-     * declaración de la instancia {@link FileUtils}
-     */
     private FileUtils fileUtils;
-    /**
-     * declare the instance of {@link TextUtils}
-     */
     private TextUtils textUtils;
-    /**
-     * declara the local path
-     */
     private String localFilePath;
-    /**
-     * constructor de la clase
-     * <br> post: </br> inicializa la intancia de {@link FileUtils}
-     */
+
     public FileOperations(String nLocalFilePath) {
         fileUtils = new FileUtils();
         localFilePath = nLocalFilePath;
         textUtils = new TextUtils();
     }
-    /**
-     * busca los archivos y puede navegar entre directorios
-     * @param nPath: dirección nueva a ver los archivos
-     */
     public void changeDirectory(String nPath) {
         File f = new File(localFilePath);
         String p = textUtils.getCleanPath(nPath);
         localFilePath = f.getPath().concat(File.separator + p);
     }
-    /**
-     * lista los archivos del directorio
-     */
     public void listFiles() {
         File lf = new File(localFilePath);
         for(File f: lf.listFiles()) {
@@ -59,16 +40,9 @@ public class FileOperations {
             );
         }
     }
-    /**
-     * lista los archivos de un zip
-     */
     public void listZipEntries(String zipFilePath) {
         fileUtils.zipEntries(zipFilePath);
     }
-    /**
-     * start or open a file
-     * @param filePath: path of the file to open
-     */
     public void startOrOpenFile(String filePath) {
         File f = new File(filePath);
         Process p = null;
@@ -91,9 +65,6 @@ public class FileOperations {
             }
         }
     }
-    /**
-     * read the file lines like the cat command
-     */
     public String readFileLines(String fileName) {
         String p = textUtils.getCleanPath(fileName);
         File f = new File(p);
@@ -115,27 +86,23 @@ public class FileOperations {
      */
     public void searchFileOrFolder(String filePath, String cliOption, String cliContext) {
         System.out.println("[ SEARCHING ] ...");
-        try {
-            File f = new File(filePath);
-            switch(cliOption) {
-                case "-td":
-                    fileUtils.areSimilarDirs(
-                        f,
-                        cliOption,
-                        cliContext
-                    );
-                    break;
-                default:
-                    fileUtils.listFilesFromPath(filePath)
-                        .parallelStream()
-                        .filter(e -> fileUtils.areSimilar(e, cliOption, cliContext))
-                        .forEach(e -> {
-                            fileUtils.printFilePath(e);
-                        });
-                    break;
-            }
-        } catch(IOException e) {
-            e.printStackTrace();
+        File f = new File(filePath);
+        switch(cliOption) {
+            case "-td":
+                fileUtils.areSimilarDirs(
+                    f,
+                    cliOption,
+                    cliContext
+                );
+                break;
+            default:
+                fileUtils.listFilesFromPath(filePath)
+                    .parallelStream()
+                    .filter(e -> fileUtils.areSimilar(e, cliOption, cliContext))
+                    .forEach(e -> {
+                        fileUtils.printFilePath(e);
+                    });
+                break;
         }
     }
     private String paintLine(String first, String second) {
@@ -206,9 +173,8 @@ public class FileOperations {
         }
     }
     /**
-     * crea un directorio en el directorio local
-     * @param directoryNames: nombre del directorio a crear
-     * @throws Execute no soporta crear varios directorios separados por ","
+     * Creates a directory.
+     * @param directoryNames - the name of the directory or the nested structure of directories.
      */
     public void createDirectories(String directoryNames) {
         File lf = new File(localFilePath);
@@ -253,7 +219,7 @@ public class FileOperations {
     /**
      * compress the files of the given path into a zip file
      * @param givenPath: path of the files to compress
-     * @param includeFiles: files or names or patters to exlude in the compression
+     * @param includeFiles: files or names or patters to exclude in the compression
      */
     public void compressFilesInPath(String givenPath, String includeFiles, String name) {
         File f = new File(givenPath);
@@ -297,9 +263,8 @@ public class FileOperations {
         }
     }
     /**
-     * elimina un directorio deseado o varios directorios
-     * <br> pre: </br> si el directorio tiene archivos primero eliminar los archivos  luego el directorio
-     * @param directoryPath: direccion del directorio(s) a eliminar
+     * Delete a directory if its are empty, if the directory has a nested structure it deletes every directory inside of it.
+     * @param directoryPath - the directory to delete.
      */
     public void deleteDirectories(String filePath) {
         File f = new File(filePath);
@@ -335,8 +300,6 @@ public class FileOperations {
     }
     /**
      * delete files from folder given by path
-     * <br> pre: </br> if the path is directory delete files leave directory, if its file delete the file
-     * <br> post: </br> the files are deted not the folder
      * @param deletePath: path of the files or folders to delete
      */
     public void deleteFilesFromPath(String deletePath) {
@@ -356,10 +319,9 @@ public class FileOperations {
         }
     }
     /**
-     * mueve los archivos de source to target
-     * <br> post: </br> los archivos de source seran eliminados
-     * @param sourceFilePath: direccion source de archivos
-     * @param targetFilePath: direccion target para los archivos
+     * Move files from source path to target path.
+     * @param sourceFilePath - the source file to move.
+     * @param targetFilePath - the target path to store the source file.
      */
     public void moveFromSourceToTarget(String sourceFilePath, String targetFilePath) {
         try {
@@ -408,10 +370,9 @@ public class FileOperations {
         );
     }
     /**
-     * renombra un directorio con otro nombre
-     * <br> post: </br> los archivos del source se quedan
-     * @param oldName: nombre a cambiar
-     * @param newName: nuevo nombre
+     * Rename a directory.
+     * @param oldName - the previous name.
+     * @param newName - the new name.
      */
     public void renameDirectory(String oldName, String newName) {
         try {
@@ -430,10 +391,9 @@ public class FileOperations {
         }
     }
     /**
-     * copia el directorio source en el target
-     * <br> pre: </br> se tienen en cuenta que si en el target no existe el directorio a copiar se crea
-     * @param sourceFilePath ruta del directorio source
-     * @param targetFilePath ruta del directorio target
+     * Copy file or directory from source path to target path.
+     * @param sourceFilePath the source path where the files are.
+     * @param targetFilePath the target path where to copy the source files.
      * @param isReplaceable REPLACE_EXISTING, COPY_ATTRIBUTES
      */
     public void copyFromSourceToTarget(String sourceFilePath, String targetFilePath, boolean isReplaceable) {

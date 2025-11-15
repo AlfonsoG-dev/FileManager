@@ -1,7 +1,7 @@
-import Application.Operations.Operaciones;
+import Application.Operations.Operations;
 class filesManager {
     public static void main(String[] args) {
-        Operaciones misOperaciones = new Operaciones();
+        Operations misOperaciones = new Operations();
         misOperaciones.organizeOptions(args);
     }
 }

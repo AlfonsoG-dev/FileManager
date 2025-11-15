@@ -26,32 +26,27 @@ public class FileUtils {
     }
     /**
      * get the local name
-     * @param localPath: local path
+     * @param localPath - local path
      * @return the name of the given path
      */
     public String getLocalName(String localPath) {
         try {
-            File local = new File(localPath);
-            String n = "", p = "";
-            if(local.exists()) {
-                p = local.getCanonicalPath(); 
-                n = new File(p).getName();
-            }
-            return n;
+            String local = new File(localPath).getCanonicalPath();
+            return new File(local).getName();
         } catch(IOException e) {
             e.printStackTrace();
             return null;
         }
     }
     /**
-     * ayuda a generar la ruta de los elementos del directorio
-     * @param miFiles: elementos del directorio
-     * @return string con la ruta de los elementos del directorio
+     * A list of directories.
+     * @param myFile - the file path to search for directories.
+     * @return A list of directories.
      */
-    public List<File> listDirectoryNames(File f) {
+    public List<File> listDirectoryNames(File myFile) {
         List<File> names = new ArrayList<>();
         try {
-            names = Files.walk(f.toPath(), FileVisitOption.FOLLOW_LINKS)
+            names = Files.walk(myFile.toPath(), FileVisitOption.FOLLOW_LINKS)
                 .map(Path::toFile)
                 .filter(p -> p.isDirectory())
                 .toList();
@@ -61,9 +56,9 @@ public class FileUtils {
         return names;
     }
     /**
-     * ayuda a generar la ruta de los archivos dentro de cualquier directorio
-     * @param miFiles: los archivos dentro de un directorio
-     * @return la ruta de los archivos dentro de cualquier directorio
+     * A list of files of a directory.
+     * @param f - the file to list its content.
+     * @return a list if files.
      */
     public List<File> listDirectoryFiles(File f) {
         List<File> files = new ArrayList<>();
@@ -78,14 +73,14 @@ public class FileUtils {
         return files;
     }
     /**
-     * listar la ruta de todos los archivos del directorio 
-     * @param filePath: ruta del directorio a buscar
-     * @return un String con la ruta de todos los archivos
+     * A list of files of a particular path.
+     * @param fileURI - the file path to list its files.
+     * @return a list of files.
      */
-    public List<File> listFilesFromPath(String filePath) {
+    public List<File> listFilesFromPath(String fileURI) {
         List<File> files = new ArrayList<>();
         try {
-            File f = new File(filePath);
+            File f = new File(fileURI);
             files = Files.walk(f.toPath(), FileVisitOption.FOLLOW_LINKS)
                 .map(Path::toFile)
                 .filter(p -> p.isFile())
@@ -98,7 +93,7 @@ public class FileUtils {
 
     /**
      * helper method to print the file path.
-     * @param f: file to print its path
+     * @param f - file to print its path
      */
     public void printFilePath(File f) {
         System.out.println(
@@ -108,6 +103,11 @@ public class FileUtils {
             )
         );
     }
+    /**
+     * Get the file content on a string concatenation by \n.
+     * @param f - the file to read its content
+     * @return the file content.
+     */
     public String getFileLines(File f) {
         StringBuffer b = new StringBuffer();
         try(BufferedReader reader = new BufferedReader(new FileReader(f))) {
@@ -127,7 +127,7 @@ public class FileUtils {
      * @param cliContext: name to compare with the file name
      * @return true if the files are similar otherwise false
      */
-    public boolean areSimilarDirs(File f, String cliOption, String cliContext) throws IOException {
+    public boolean areSimilarDirs(File f, String cliOption, String cliContext) {
         boolean similar = false;
         String c = cliContext.toLowerCase();
         switch(cliOption) {
@@ -180,6 +180,13 @@ public class FileUtils {
         }
         return similar;
     }
+    /**
+     * Compare two lines with ignore case or smartcase.
+     * @param cliOption the option -i or -s to enable ignore case or smartcase option.
+     * @param first the line to compare with the context.
+     * @param cliContext the line to compare with.
+     * @return true if the lines are similar, false otherwise.
+     */
     public boolean areSimilarLines(String cliOption, String first, String cliContext) {
         boolean isSimilar = false;
         switch(cliOption) {
@@ -199,10 +206,9 @@ public class FileUtils {
         return isSimilar;
     }
     /**
-     * si en la ruta target no existe el directorio se crea
-     * <br> pre: </br> si la ruta tiene más de 1 directorio como padre entonces se crea con mkdirs
-     * @param targetFilePath: ruta del directorio target
-     * @param parentFileNames: nombres de los directorios a crear
+     * Create a directory if the provided path doesn't exists; if the path has a nested structure create from parent to children.
+     * @param targetFilePath - where to create the directory.
+     * @param parentFileNames - the parent path to create in target.
      */
     public void createParentFile(String targetFilePath, String parentFileNames) {
         String[] pn = parentFileNames.split("\n");
@@ -251,6 +257,7 @@ public class FileUtils {
      * @param source: source of the files
      * @param base: name of the file
      * @param zop: {@link ZipOutputStream}
+     * @param includeFiles - the files to include in the zip creation.
      */
     private void addFilesToZip(File source, String base, ZipOutputStream zop, String includeFiles) {
         if(source.isDirectory() && source.listFiles() != null) {
@@ -382,7 +389,7 @@ public class FileUtils {
                     System.out.println(
                         String.format(
                             Colors.YELLOW_UNDERLINE +
-                            "THE FOLDER STRUCTURE: | %s | ARE NEDDED." + 
+                            "THE FOLDER STRUCTURE: | %s | ARE NEEDED." + 
                             Colors.RESET,
                             miFile.getPath()
                         )

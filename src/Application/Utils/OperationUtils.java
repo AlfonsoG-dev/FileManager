@@ -2,38 +2,18 @@ package Application.Utils;
 
 import Application.Operations.FileOperations;
 import Application.Utils.Verifications.OptionVerification;
-/**
- * clase para ayudar a crear la operaciones de forma ordenada
- */
 public final class OperationUtils {
-    /**
-     * operaciones con los archivos
-     */
     private FileOperations fileOperations;
-    /**
-     * CLI option verification
-     */
     private OptionVerification optionVerification;
-    /**
-     * opciones CLI
-     */
     private String[] options;
-    /**
-     * contador de opciones
-     */
     private int i;
-    /**
-     * constructor
-     */
+
     public OperationUtils(String localFilePath, String[] nOptions, int nI) {
         fileOperations = new FileOperations(localFilePath);
         optionVerification = new OptionVerification(nOptions);
         options = nOptions;
         i = nI;
     }
-    /**
-     * realiza la operacion de listar los directorios
-     */
     public void changeDirectoryOperation() {
         if(!optionVerification.verifyFirstFile(i).isEmpty()) {
             fileOperations.changeDirectory(
@@ -104,9 +84,6 @@ public final class OperationUtils {
             cliContext
         );
     }
-    /**
-     * realiza la opreacion de mover los directorios
-     */
     public void moveDirectoryOperation() throws Exception {
         boolean 
             conditionA = optionVerification.verifyFirstFile(i).isEmpty(),
@@ -167,10 +144,6 @@ public final class OperationUtils {
             }
         }
     }
-    /**
-     * realiza la operacion de renombrar un archivo
-     * <br> pre: </br> en realidad es mover el archivo pero en este caso crea el target
-     */
     public void renameDirectory() {
         boolean 
             conditionA = optionVerification.verifyFirstFile(i).isEmpty(),
@@ -187,9 +160,6 @@ public final class OperationUtils {
             );
         }
     }
-    /**
-     * realiza la operacion de crear un directorio
-     */
     public void createDirectoryOperation() {
         boolean 
             conditionA = optionVerification.verifyFirstFile(i).isEmpty(),
@@ -206,7 +176,7 @@ public final class OperationUtils {
         }
     }
     /*
-     * creates a file wihtin the CLI options
+     * creates a file within the CLI options
      */
     public void createFileOperation() {
         boolean
@@ -280,9 +250,6 @@ public final class OperationUtils {
             fileOperations.deCompressFilesInPath(deCompressPath, null);
         }
     }
-    /**
-     * realiza la opreacion de eliminar el directorio
-     */
     public void deleteDirectoryOperation() {
         boolean 
             conditionA = optionVerification.verifyFirstFile(i).isEmpty(),
@@ -339,9 +306,6 @@ public final class OperationUtils {
             isReplaceable
         );
     }
-    /**
-     * realiza la operacion de copiar source en target
-     */
     public void copySourceDirectoryToTargetOperation() {
         boolean 
             conditionA = optionVerification.verifyFirstFile(i).isEmpty(),
