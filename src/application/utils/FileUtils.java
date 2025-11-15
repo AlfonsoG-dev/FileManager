@@ -9,6 +9,7 @@ import java.nio.file.Path;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.FileVisitOption;
+import java.nio.file.StandardCopyOption;
 
 
 public class FileUtils {
@@ -33,6 +34,17 @@ public class FileUtils {
         } catch(IOException e) {
             e.printStackTrace();
             return null;
+        }
+    }
+    public void copyFileToTarget(Path sourcePath, String targetURI) {
+        try {
+            Path destination = Paths.get(targetURI).resolve(sourcePath.getFileName());
+            Path result = Files.copy(sourcePath, destination, StandardCopyOption.COPY_ATTRIBUTES);
+            if(result != null) {
+                System.out.println(String.format("[Info] copy %s into \n\t=>[%s]", sourcePath.toString(), destination.toString()));
+            }
+        } catch(IOException e) {
+            e.printStackTrace();
         }
     }
 
