@@ -2,6 +2,7 @@ package application.utils;
 
 import java.util.List;
 import java.util.Comparator;
+import java.util.function.Function;
 
 import java.io.File;
 import java.io.IOException;
@@ -14,6 +15,7 @@ import java.nio.file.StandardCopyOption;
 
 
 public class FileUtils {
+    private Function<Path, String> getPath = p -> p.toString();
 
     /**
      * create a directories if they're not created.
@@ -38,9 +40,9 @@ public class FileUtils {
             // create nested structure for directories
             if(p.getNameCount() > 2) {
                 Path parent = p.getParent();
-                if(parent != null) createDirectory(parent.toString());
+                if(parent != null) createDirectory(getPath.apply(parent));
             }
-            System.out.println(String.format("[Info] Creating => %s", p.toString()));
+            System.out.println(String.format("[Info] Creating => %s", getPath.apply(p)));
             return p.toFile().createNewFile();
         } catch(IOException e) {
             e.printStackTrace();
@@ -107,7 +109,10 @@ public class FileUtils {
             Path destination = Paths.get(targetURI).resolve(sourcePath.getFileName());
             Path result = Files.copy(sourcePath, destination, StandardCopyOption.COPY_ATTRIBUTES);
             if(result != null) {
-                System.out.println(String.format("[Info] copy %s \n\tinto \t=>[%s]", sourcePath.toString(), destination.toString()));
+                System.out.println(
+                        String.format("[Info] copy %s \n\tinto \t=>[%s]",
+                            getPath.apply(sourcePath), getPath.apply(result))
+                );
             }
         } catch(IOException e) {
             e.printStackTrace();
@@ -130,7 +135,7 @@ public class FileUtils {
                 Path destination = targetPath.resolve(relative);
                 if(Files.isDirectory(p)) {
                     createDirectory(destination.toString());
-                    System.out.println(String.format("[Info] Creating {%s}", destination.toString()));
+                    System.out.println(String.format("[Info] Creating {%s}", getPath.apply(destination)));
                 } else {
                     Path r = Files.copy(p, destination, StandardCopyOption.COPY_ATTRIBUTES);
                     System.out.println(String.format("[Info] Copy %s \n\tinto \t=>[%s]", p, r));
@@ -165,13 +170,13 @@ public class FileUtils {
         try {
             Path targetPath = Paths.get(targetURI);
             // first list and create the directory structure.
-            List<Path> paths = listDirContent(sourcePath.toString(), level);
+            List<Path> paths = listDirContent(getPath.apply(sourcePath), level);
             for(Path p: paths) {
                 Path relative = sourcePath.relativize(p);
                 Path destination = targetPath.resolve(relative);
                 if(Files.isDirectory(p)) {
                     createDirectory(destination.toString());
-                    System.out.println(String.format("[Info] Creating {%s}", destination.toString()));
+                    System.out.println(String.format("[Info] Creating {%s}", getPath.apply(destination)));
                 } else {
                     Path r = Files.move(p, destination, StandardCopyOption.REPLACE_EXISTING);
                     System.out.println(String.format("[Info] Move %s \n\tinto \t=>[%s]", p, r));

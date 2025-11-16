@@ -10,6 +10,6 @@ class FileManager {
     public static void main(String[] args) {
         String localPath = "." + File.separator;
         FileUtils fu = new FileUtils();
-        boolean a = fu.deleteDirectory("docs", false);
+        boolean a = fu.createFile("docs/mio.py");
     }
 }
