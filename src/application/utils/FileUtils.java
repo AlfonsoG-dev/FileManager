@@ -69,6 +69,11 @@ public class FileUtils {
                         System.out.println("[Info] Deleting directory => " + p);
                     }
                 }
+            } else {
+                if(Files.deleteIfExists(f.toPath())) {
+                    System.out.println("[Info] Deleting directory => " + f.toString());
+                    return true;
+                }
             }
         } catch(Exception e) {
             e.printStackTrace();
