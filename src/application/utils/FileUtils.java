@@ -134,12 +134,12 @@ public class FileUtils {
     public void copyDirToTarget(Path sourcePath, String targetURI, int level) {
         if(!path2File.apply(sourcePath).isDirectory() || !path2File.apply(sourcePath).exists()) return;
         try {
-            Path targetString = Paths.get(targetURI);
+            Path targetPath = Paths.get(targetURI);
             // first list and create the directory structure.
             List<Path> paths = listDirContent(sourcePath.toString(), level);
             for(Path p: paths) {
                 Path relative = sourcePath.relativize(p);
-                Path destination = targetString.resolve(relative);
+                Path destination = targetPath.resolve(relative);
                 if(Files.isDirectory(p)) {
                     createDirectory(destination.toString());
                     System.out.println(String.format("[Info] Creating {%s}", getString.apply(destination)));
@@ -172,15 +172,16 @@ public class FileUtils {
             e.printStackTrace();
         }
     }
+
     public void moveDirToTarget(Path sourcePath, String targetURI, int level) {
         if(!path2File.apply(sourcePath).exists()) return;
         try {
-            Path targetString = Paths.get(targetURI);
+            Path targetPath = Paths.get(targetURI);
             // first list and create the directory structure.
             List<Path> paths = listDirContent(getString.apply(sourcePath), level);
             for(Path p: paths) {
                 Path relative = sourcePath.relativize(p);
-                Path destination = targetString.resolve(relative);
+                Path destination = targetPath.resolve(relative);
                 if(Files.isDirectory(p)) {
                     createDirectory(destination.toString());
                     System.out.println(String.format("[Info] Creating {%s}", getString.apply(destination)));
