@@ -1,7 +1,6 @@
 package application;
 
 import java.io.File;
-import java.nio.file.Paths;
 
 import application.utils.FileUtils;
 

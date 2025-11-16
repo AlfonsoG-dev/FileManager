@@ -27,8 +27,28 @@ public class FileUtils {
         File f = new File(pathURI);
         if(f.isFile()) return false;
         if(f.isDirectory() && f.exists()) return true;
-        if(f.toPath().getNameCount() > 2) return f.mkdirs();
+        if(f.toPath().getNameCount() > 2 && f.isDirectory()) return f.mkdirs();
         return f.mkdir();
+    }
+    /**
+     * creates a file it its not already created, if the file its in a nested structure created the directories first.
+     * @param pathURI - the file to create.
+     * @return true if the file was created, false otherwise.
+     */
+    public boolean createFile(String pathURI) {
+        Path p = Paths.get(pathURI);
+        try {
+            // create nested structure for directories
+            if(p.getNameCount() > 2) {
+                Path parent = p.getParent();
+                if(parent != null) createDirectory(parent.toString());
+            }
+            System.out.println(String.format("[Info] Creating => %s", p.toString()));
+            return p.toFile().createNewFile();
+        } catch(IOException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
     /**
      * Deletes a directory if its empty, otherwise you must provide --r to delete it.
