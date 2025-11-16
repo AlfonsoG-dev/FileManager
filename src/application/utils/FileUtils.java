@@ -2,13 +2,16 @@ package application.utils;
 
 import java.util.List;
 import java.util.Comparator;
+import java.util.Enumeration;
 import java.util.function.Function;
+
 import java.util.zip.ZipFile;
 import java.util.zip.ZipEntry;
-import java.util.Enumeration;
+import java.util.zip.ZipOutputStream;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.BufferedOutputStream;
 
 import java.nio.file.Path;
 import java.nio.file.Files;
@@ -209,6 +212,31 @@ public class FileUtils {
             for(Enumeration<?> e = z.entries(); e.hasMoreElements();) {
                 System.out.println(String.format("%d:%s", i, e.nextElement()));
                 ++i;
+            }
+        } catch(IOException e) {
+            e.printStackTrace();
+        }
+    }
+    /**
+     * Compress a directory into a zip file.
+     * @param sourcePath - the path to compress.
+     * @param targetPath - the compressed file path.
+     * @param level - the nested level to reach.
+     */
+    public void compreessPath(Path sourcePath, Path targetPath, int level) {
+        try(ZipOutputStream output = new ZipOutputStream(new BufferedOutputStream(Files.newOutputStream(targetPath)))) {
+            List<Path> paths = listDirContent(getString.apply(sourcePath), level)
+                .stream()
+                .filter(Files::isRegularFile)
+                .toList();
+            for(Path p: paths) {
+                Path relative = sourcePath.relativize(p);
+                // replace \\ with / by zip standard
+                ZipEntry entry = new ZipEntry(getString.apply(relative).replace("\\", "/"));
+                output.putNextEntry(entry);
+                // copy files into zip
+                Files.copy(p, output);
+                output.closeEntry();
             }
         } catch(IOException e) {
             e.printStackTrace();
