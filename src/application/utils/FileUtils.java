@@ -1,6 +1,7 @@
 package application.utils;
 
 import java.util.List;
+import java.util.Comparator;
 
 import java.io.File;
 import java.io.IOException;
@@ -13,10 +14,6 @@ import java.nio.file.StandardCopyOption;
 
 
 public class FileUtils {
-    private String localPath;
-    public FileUtils(String localPath) {
-        this.localPath = localPath;
-    }
 
     /**
      * create a directories if they're not created.
@@ -59,25 +56,25 @@ public class FileUtils {
         File f = new File(pathURI);
         if(!f.isDirectory() || !f.exists()) return false;
         try {
-            if(recursively) {
+            if(recursively && f.listFiles() != null) {
                 // get files to delete.
                 List<Path> paths = listDirContent(pathURI, 0)
                     .stream()
-                    .filter(Files::isRegularFile)
+                    .sorted(Comparator.reverseOrder())
                     .toList();
                 for(Path p: paths) {
-                    System.out.println(String.format("[Info] Deleting => %s", p.toString()));
-                    Files.deleteIfExists(p);
+                    if(Files.isRegularFile(p) && Files.deleteIfExists(p)) {
+                        System.out.println("[Info] Deleting file => " + p);
+                    } else if(Files.deleteIfExists(p)) {
+                        System.out.println("[Info] Deleting directory => " + p);
+                    }
                 }
-                return deleteDirectory(f.getPath(), false);
-            } else {
-                System.out.println(String.format("[Info] Deleting => %s", f.toString()));
-                return Files.deleteIfExists(f.toPath());
             }
-        } catch(IOException e) {
+        } catch(Exception e) {
             e.printStackTrace();
             return false;
         }
+        return true;
     }
     /**
      * List directory content by level, if nested level is 0, it will search recursively.
@@ -138,6 +135,46 @@ public class FileUtils {
             e.printStackTrace();
         }
 
+    }
+    /**
+     * Move a file from one place to another.
+     * <p> Make sure the destination already exists.
+     * <p> If the file already exists, it will be replaced.
+     * @param sourcePath - the file to move.
+     * @param targetURI - the destination path.
+     */
+    public void moveFileToTarget(Path sourcePath, String targetURI) {
+        if(!sourcePath.toFile().exists()) return;
+        try {
+            Path destination = Paths.get(targetURI).resolve(sourcePath.getFileName());
+            Path result = Files.move(sourcePath, destination, StandardCopyOption.REPLACE_EXISTING);
+            if(result != null) {
+                System.out.println(String.format("[Info] Move %s \n\tinto \t=>[%s]", sourcePath, result));
+            }
+        } catch(IOException e) {
+            e.printStackTrace();
+        }
+    }
+    public void moveDirToTarget(Path sourcePath, String targetURI, int level) {
+        if(!sourcePath.toFile().exists()) return;
+        try {
+            Path targetPath = Paths.get(targetURI);
+            // first list and create the directory structure.
+            List<Path> paths = listDirContent(sourcePath.toString(), level);
+            for(Path p: paths) {
+                Path relative = sourcePath.relativize(p);
+                Path destination = targetPath.resolve(relative);
+                if(Files.isDirectory(p)) {
+                    createDirectory(destination.toString());
+                    System.out.println(String.format("[Info] Creating {%s}", destination.toString()));
+                } else {
+                    Path r = Files.move(p, destination, StandardCopyOption.REPLACE_EXISTING);
+                    System.out.println(String.format("[Info] Move %s \n\tinto \t=>[%s]", p, r));
+                }
+            }
+        } catch(IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }

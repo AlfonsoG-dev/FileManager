@@ -1,10 +1,15 @@
 package application.utils;
 
+import java.util.stream.Stream;
+
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.BufferedReader;
 import java.io.IOException;
+
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 public record TextUtils() {
 
@@ -25,6 +30,20 @@ public record TextUtils() {
             e.printStackTrace();
         }
         return lines.toString();
+    }
+    /**
+     * A stream with the file content to be consumed.
+     * <p> use this with a try-resource to close on end.
+     * @param fileURI - the file to get its content.
+     * @return a stream with the file content.
+     */
+    public static Stream<String> getLazilyFileLines(String fileURI) {
+        try {
+            return Files.lines(Paths.get(fileURI));
+        } catch(IOException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
     /**
      * statically write a file with the provided lines.
