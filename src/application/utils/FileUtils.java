@@ -231,7 +231,7 @@ public class FileUtils {
                 .toList();
             for(Path p: paths) {
                 Path relative = sourcePath.relativize(p);
-                // replace \\ with / by zip standard
+                // replace "\\" with "/" by zip standards.
                 ZipEntry entry = new ZipEntry(getString.apply(relative).replace("\\", "/"));
                 output.putNextEntry(entry);
                 // copy files into zip

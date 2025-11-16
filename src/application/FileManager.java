@@ -10,6 +10,6 @@ class FileManager {
     public static void main(String[] args) {
         String localPath = "." + File.separator;
         FileUtils fu = new FileUtils();
-        // fu.compreessPath(Paths.get("docs"), Paths.get("M.zip"), 1);
+        // fu.compreessPath(Paths.get("docs"), Paths.get("M.jar"), 1);
     }
 }
