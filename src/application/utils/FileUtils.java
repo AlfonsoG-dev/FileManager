@@ -15,7 +15,14 @@ import java.nio.file.StandardCopyOption;
 
 
 public class FileUtils {
-    private Function<Path, String> getPath = p -> p.toString();
+    /**
+     * transform {@Path} to {@String}
+     */
+    private Function<Path, String> getString = p -> p.toString();
+    /**
+     * transform {@Path} to {@File}
+     */
+    private Function<Path, File> path2File = p -> p.toFile();
 
     /**
      * create a directories if they're not created.
@@ -40,10 +47,10 @@ public class FileUtils {
             // create nested structure for directories
             if(p.getNameCount() > 2) {
                 Path parent = p.getParent();
-                if(parent != null) createDirectory(getPath.apply(parent));
+                if(parent != null) createDirectory(getString.apply(parent));
             }
-            System.out.println(String.format("[Info] Creating => %s", getPath.apply(p)));
-            return p.toFile().createNewFile();
+            System.out.println(String.format("[Info] Creating => %s", getString.apply(p)));
+            return path2File.apply(p).createNewFile();
         } catch(IOException e) {
             e.printStackTrace();
             return false;
@@ -104,14 +111,14 @@ public class FileUtils {
      * @param targetURI - the path where to copy the source file.
      */
     public void copyFileToTarget(Path sourcePath, String targetURI) {
-        if(!sourcePath.toFile().isFile() || !sourcePath.toFile().exists()) return;
+        if(!path2File.apply(sourcePath).isFile() || !path2File.apply(sourcePath).exists()) return;
         try {
             Path destination = Paths.get(targetURI).resolve(sourcePath.getFileName());
             Path result = Files.copy(sourcePath, destination, StandardCopyOption.COPY_ATTRIBUTES);
             if(result != null) {
                 System.out.println(
                         String.format("[Info] copy %s \n\tinto \t=>[%s]",
-                            getPath.apply(sourcePath), getPath.apply(result))
+                            getString.apply(sourcePath), getString.apply(result))
                 );
             }
         } catch(IOException e) {
@@ -125,17 +132,17 @@ public class FileUtils {
      * @param level - the nested level to reach.
      */
     public void copyDirToTarget(Path sourcePath, String targetURI, int level) {
-        if(!sourcePath.toFile().isDirectory() || !sourcePath.toFile().exists()) return;
+        if(!path2File.apply(sourcePath).isDirectory() || !path2File.apply(sourcePath).exists()) return;
         try {
-            Path targetPath = Paths.get(targetURI);
+            Path targetString = Paths.get(targetURI);
             // first list and create the directory structure.
             List<Path> paths = listDirContent(sourcePath.toString(), level);
             for(Path p: paths) {
                 Path relative = sourcePath.relativize(p);
-                Path destination = targetPath.resolve(relative);
+                Path destination = targetString.resolve(relative);
                 if(Files.isDirectory(p)) {
                     createDirectory(destination.toString());
-                    System.out.println(String.format("[Info] Creating {%s}", getPath.apply(destination)));
+                    System.out.println(String.format("[Info] Creating {%s}", getString.apply(destination)));
                 } else {
                     Path r = Files.copy(p, destination, StandardCopyOption.COPY_ATTRIBUTES);
                     System.out.println(String.format("[Info] Copy %s \n\tinto \t=>[%s]", p, r));
@@ -154,7 +161,7 @@ public class FileUtils {
      * @param targetURI - the destination path.
      */
     public void moveFileToTarget(Path sourcePath, String targetURI) {
-        if(!sourcePath.toFile().exists()) return;
+        if(!path2File.apply(sourcePath).exists()) return;
         try {
             Path destination = Paths.get(targetURI).resolve(sourcePath.getFileName());
             Path result = Files.move(sourcePath, destination, StandardCopyOption.REPLACE_EXISTING);
@@ -166,17 +173,17 @@ public class FileUtils {
         }
     }
     public void moveDirToTarget(Path sourcePath, String targetURI, int level) {
-        if(!sourcePath.toFile().exists()) return;
+        if(!path2File.apply(sourcePath).exists()) return;
         try {
-            Path targetPath = Paths.get(targetURI);
+            Path targetString = Paths.get(targetURI);
             // first list and create the directory structure.
-            List<Path> paths = listDirContent(getPath.apply(sourcePath), level);
+            List<Path> paths = listDirContent(getString.apply(sourcePath), level);
             for(Path p: paths) {
                 Path relative = sourcePath.relativize(p);
-                Path destination = targetPath.resolve(relative);
+                Path destination = targetString.resolve(relative);
                 if(Files.isDirectory(p)) {
                     createDirectory(destination.toString());
-                    System.out.println(String.format("[Info] Creating {%s}", getPath.apply(destination)));
+                    System.out.println(String.format("[Info] Creating {%s}", getString.apply(destination)));
                 } else {
                     Path r = Files.move(p, destination, StandardCopyOption.REPLACE_EXISTING);
                     System.out.println(String.format("[Info] Move %s \n\tinto \t=>[%s]", p, r));
