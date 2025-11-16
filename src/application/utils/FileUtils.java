@@ -136,12 +136,12 @@ public class FileUtils {
         try {
             Path targetPath = Paths.get(targetURI);
             // first list and create the directory structure.
-            List<Path> paths = listDirContent(sourcePath.toString(), level);
+            List<Path> paths = listDirContent(getString.apply(sourcePath), level);
             for(Path p: paths) {
                 Path relative = sourcePath.relativize(p);
                 Path destination = targetPath.resolve(relative);
                 if(Files.isDirectory(p)) {
-                    createDirectory(destination.toString());
+                    createDirectory(getString.apply(destination));
                     System.out.println(String.format("[Info] Creating {%s}", getString.apply(destination)));
                 } else {
                     Path r = Files.copy(p, destination, StandardCopyOption.COPY_ATTRIBUTES);
@@ -183,7 +183,7 @@ public class FileUtils {
                 Path relative = sourcePath.relativize(p);
                 Path destination = targetPath.resolve(relative);
                 if(Files.isDirectory(p)) {
-                    createDirectory(destination.toString());
+                    createDirectory(getString.apply(destination));
                     System.out.println(String.format("[Info] Creating {%s}", getString.apply(destination)));
                 } else {
                     Path r = Files.move(p, destination, StandardCopyOption.REPLACE_EXISTING);
