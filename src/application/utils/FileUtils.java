@@ -3,6 +3,9 @@ package application.utils;
 import java.util.List;
 import java.util.Comparator;
 import java.util.function.Function;
+import java.util.zip.ZipFile;
+import java.util.zip.ZipEntry;
+import java.util.Enumeration;
 
 import java.io.File;
 import java.io.IOException;
@@ -189,6 +192,23 @@ public class FileUtils {
                     Path r = Files.move(p, destination, StandardCopyOption.REPLACE_EXISTING);
                     System.out.println(String.format("[Info] Move %s \n\tinto \t=>[%s]", p, r));
                 }
+            }
+        } catch(IOException e) {
+            e.printStackTrace();
+        }
+    }
+    /**
+     * Reading a compressed file entries.
+     * @param fileURI - the file to read its entries.
+     */
+    public void readZipFile(String fileURI) {
+        File f = new File(fileURI);
+        if(!f.isFile() && !f.exists()) return;
+        try(ZipFile z = new ZipFile(f)) {
+            int i=1;
+            for(Enumeration<?> e = z.entries(); e.hasMoreElements();) {
+                System.out.println(String.format("%d:%s", i, e.nextElement()));
+                ++i;
             }
         } catch(IOException e) {
             e.printStackTrace();
