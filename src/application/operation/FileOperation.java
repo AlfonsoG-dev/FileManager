@@ -166,8 +166,44 @@ public class FileOperation {
         if(sources.isEmpty()) return;
         if(sources.size() != targets.size()) return;
 
-        for(int i = 0; i < sources.size(); i++) {
+        for(int i = 0; i < sources.size(); ++i) {
             moveFile(sources.get(i), targets.get(i));
+        }
+    }
+    /**
+     * Move a directory to a target destination.
+     * @param sourceURI - the source of the directory to move.
+     * @param targetURI - the target path.
+     * @param permission - if to move immediate order or recursively.
+     */
+    public void moveDir(String sourceURI, String targetURI, String permission) {
+        int level = 1;
+        if(!permission.isBlank() && permission.equals("--r")) level = 0;
+        fileUtils.moveDirToTarget(Paths.get(sourceURI), targetURI, level);
+    }
+    /**
+     * Move multiple sources to a single target.
+     * @param sources - the list of sources to move. 
+     * @param targetURI - the target destination path.
+     * @param permission - to move immediate or recursively.
+     */
+    public void moveDirsToTarget(List<String> sources, String targetURI, String permission) {
+        if(sources.isEmpty()) return;
+        for(String s: sources) {
+            moveDir(targetURI, s, permission);
+        }
+    }
+    /**
+     * Move multiple source files to multiple target destinations.
+     * <p> You can't move a single file to multiple destinations, but in this method you move the first file to the first target, and in that order until the operation is completed.
+     * @param sources - the list of files to move.
+     * @param targets - the list of targets to receive the files.
+     * @param permission - if to move immediate or recursively.
+     */
+    public void moveDirsToTargets(List<String> sources, List<String> targets, String permission) {
+        if(sources.size() != targets.size()) return;
+        for(int i=0; i<sources.size(); ++i) {
+            moveDir(sources.get(i), targets.get(i), permission);
         }
     }
     /**
