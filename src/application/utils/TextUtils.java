@@ -59,4 +59,28 @@ public record TextUtils() {
             e.printStackTrace();
         }
     }
+    /**
+     * Determine if the line contains a specific word.
+     * @param line - is the line that possibly contains a word.
+     * @param second - is the word to search.
+     * @return true if the line contains that word, false otherwise.
+     */
+    public boolean lineContainsWord(String line, String word) {
+        if (line == null || word == null) return false;
+        if (line.isBlank() || word.isBlank()) return false;
+
+        String[] tokens = line
+            .replaceAll("[^A-Za-z0-9]+", " ")
+            .trim()
+            .split("\\s+");
+
+        for(int i=tokens.length-1; i>=0; --i) {
+            String token = tokens[i];
+            if (token.equalsIgnoreCase(word)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 }
