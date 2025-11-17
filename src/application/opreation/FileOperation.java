@@ -26,10 +26,11 @@ public class FileOperation {
         if(!f.isFile()) return;
         try(Stream<String> fileLines = TextUtils.getLazilyFileLines(fileURI)) {
             List<String> lines = fileLines.toList();
-            for(String l: lines) {
-                int lineNumber = TextUtils.getLineNumber(fileURI, l);
+            for(int i=0; i<lines.size(); ++i) {
+                String l = lines.get(i);
                 if(textUtils.lineContainsWord(l, word)) {
-                    System.out.println(String.format("%d%s", lineNumber, l));
+                    int lineNumber = i;
+                    System.out.println(String.format("%s:%d\t\t%s",fileURI, ++lineNumber, l));
                 }
             }
         } catch(Exception e) {
