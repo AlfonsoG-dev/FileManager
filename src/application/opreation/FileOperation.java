@@ -49,6 +49,24 @@ public class FileOperation {
             System.out.println("[Info] If the directory to delete contain files you must provide --r");
         }
     }
+    /**
+     * List a file content if its a directory.
+     * <p> The content can be the immediate content  or recursively.
+     * @param pathURI - the path to show its content.
+     * @param permission - the prefix to change immediate or recursively.
+     */
+    public void listContent(String pathURI, String permission) {
+        int level = 1;
+        if(!permission.isBlank() && permission.equals("--r")) level = 0;
+        List<Path> paths = fileUtils.listDirContent(pathURI, level);
+        if(paths.isEmpty()) {
+            System.out.println("[Info] EMPTY");
+            return;
+        }
+        for(Path p: paths) {
+            System.out.println(p);
+        }
+    }
 
     /**
      * search in the file lines for a particular word.
