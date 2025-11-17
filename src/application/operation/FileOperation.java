@@ -10,6 +10,7 @@ import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+// FIXME: use optional to avoid null or empty values.  
 public class FileOperation {
 
     private FileUtils fileUtils;
@@ -39,6 +40,7 @@ public class FileOperation {
      * <p> If the directory contains files provide the prefix --r
      * @param pathURI - the directory to delete.
      * @param permission - the prefix to also delete the directory content.
+     * <p> permission sets a default value of 1, if you pass --r it changes to 0, symbolizing the recursively action.
      */
     public void deleteDirectory(String pathURI, String permission) {
         boolean recursively = false;
@@ -205,6 +207,19 @@ public class FileOperation {
         for(int i=0; i<sources.size(); ++i) {
             moveDir(sources.get(i), targets.get(i), permission);
         }
+    }
+    public void readCompressedFile(String fileURI) {
+        // TODO: only compressed file types allowed
+        fileUtils.readZipFile(fileURI);
+    }
+    public void compressPath(String sourceURI, String targetURI, String permission) {
+        int level = 1;
+        if(!permission.isBlank() && permission.equals("--r")) level = 0;
+        fileUtils.compreessPath(Paths.get(sourceURI), Paths.get(targetURI), level);
+    }
+    public void deCompressFile(String fileURI, String targetURI) {
+        if(fileURI.isBlank() || targetURI.isBlank()) return;
+        fileUtils.deCompressFile(fileURI, Paths.get(targetURI));
     }
     /**
      * search in the file lines for a particular word.
