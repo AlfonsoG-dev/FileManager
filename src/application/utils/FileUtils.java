@@ -10,6 +10,8 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import java.io.File;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.IOException;
 import java.io.BufferedOutputStream;
 
@@ -237,6 +239,41 @@ public class FileUtils {
                 // copy files into zip
                 Files.copy(p, output);
                 output.closeEntry();
+            }
+        } catch(IOException e) {
+            e.printStackTrace();
+        }
+    }
+    /**
+     * decompress a compressed file into a target path.
+     * @param fileURI - the file to decompress.
+     * @param targetPath - the path where to store the decompressed files
+     */
+    public void deCompressFile(String fileURI, Path targetPath) {
+        File f = new File(fileURI);
+        if(!f.isFile() && !f.exists()) return;
+        try(ZipFile z = new ZipFile(f)) {
+            Enumeration<? extends ZipEntry> zipEntries = z.entries();
+            while(zipEntries.hasMoreElements()) {
+                ZipEntry entry = zipEntries.nextElement();
+                Path destination = targetPath.resolve(entry.getName()).normalize();
+                // prevent zip attacks.
+                if(!destination.startsWith(targetPath)) throw new IOException("Bad zip entry " + entry);
+
+                // create directory
+                if(entry.isDirectory()) {
+                    Path cd = Files.createDirectories(destination);
+                    if(cd == null) return;
+                    System.out.println("[Info] Creating directory \n\t=> " + cd);
+                    continue;
+                }
+
+                // extract file
+                try(InputStream is = z.getInputStream(entry); OutputStream os = Files.newOutputStream(destination)) {
+                    System.out.println("[Info] Transferring files \n\tTo => " + destination);
+                    is.transferTo(os);
+                }
+
             }
         } catch(IOException e) {
             e.printStackTrace();
