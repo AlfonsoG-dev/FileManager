@@ -8,6 +8,7 @@ import java.util.List;
 import java.io.File;
 
 import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public class FileOperation {
 
@@ -65,6 +66,39 @@ public class FileOperation {
         }
         for(Path p: paths) {
             System.out.println(p);
+        }
+    }
+    /**
+     * Copy a file into a destination directory.
+     */
+    public void copyFile(String sourceURI, String targetURI) {
+        fileUtils.copyFileToTarget(Paths.get(sourceURI), targetURI);
+    }
+    /**
+     * copy a file into a multiple destination directories.
+     */
+    public void copyFileToTargets(String sourceURI, List<String> targets) {
+        if(targets.isEmpty()) return;
+        for(String t: targets) {
+            copyFile(sourceURI, t);
+        }
+    }
+    /**
+     * copy multiple files into a destination directory.
+     */
+    public void copyFilesToTarget(List<String> sources, String targetURI) {
+        if(sources.isEmpty()) return;
+        for(String s: sources) {
+            copyFile(s, targetURI);
+        }
+    }
+    /**
+     * copy multiple files into multiple destination directories.
+     */
+    public void copyFilesToTargets(List<String> sources, List<String> targets) {
+        if(sources.isEmpty()) return;
+        for(String s: sources) {
+            copyFileToTargets(s, targets);
         }
     }
 
