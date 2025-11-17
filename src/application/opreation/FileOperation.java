@@ -7,6 +7,8 @@ import java.util.List;
 
 import java.io.File;
 
+import java.nio.file.Path;
+
 public class FileOperation {
 
     private FileUtils fileUtils;
@@ -35,6 +37,18 @@ public class FileOperation {
             }
         } catch(Exception e) {
             e.printStackTrace();
+        }
+    }
+    public void searchWordInDirectory(String pathURI, String word, int level) {
+        File f = new File(pathURI);
+        if(!f.isDirectory()) return;
+        List<Path> paths = fileUtils.listDirContent(pathURI, level);
+        if(paths.isEmpty()) return;
+        for(Path p: paths) {
+            if(p.toFile().isFile()) {
+                sarchWordInFile(p.toString(), word);
+            }
+            System.out.println();
         }
     }
 

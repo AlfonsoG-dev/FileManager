@@ -8,6 +8,6 @@ class FileManager {
     public static void main(String[] args) {
         String localPath = "." + File.separator;
         FileOperation op = new FileOperation();
-        op.sarchWordInFile("src/application/utils/FileUtils.java", "ioexception");
+        op.searchWordInDirectory("src/application/", "ioexception", 2);
     }
 }
