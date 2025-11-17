@@ -23,6 +23,12 @@ public class FileOperation {
         textUtils = new TextUtils();
     }
 
+    /**
+     * search in the file lines for a particular word.
+     * <p> the path that you provide must be of a file type.
+     * @param fileURI - the file to read lines and search for the word.
+     * @param word - the word to search in a file.
+     */
     public void sarchWordInFile(String fileURI, String word) {
         File f = new File(fileURI);
         if(!f.isFile()) return;
@@ -39,6 +45,13 @@ public class FileOperation {
             e.printStackTrace();
         }
     }
+    /**
+     * search in the directory files for a particular word.
+     * <p> you provide a nested level to reach, 0 means you search recursively.
+     * @param fileURI - the file to read lines and search for the word.
+     * @param word - the word to search in a file.
+     * @param level - the nested level to reach.
+     */
     public void searchWordInDirectory(String pathURI, String word, int level) {
         File f = new File(pathURI);
         if(!f.isDirectory()) return;
