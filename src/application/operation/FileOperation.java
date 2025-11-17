@@ -137,12 +137,46 @@ public class FileOperation {
         }
     }
     /**
+     * Move a file to target
+     * @param sourceURI
+     * @param targetURI
+     */
+    public void moveFile(String sourceURI, String targetURI) {
+        fileUtils.moveFileToTarget(Paths.get(sourceURI), targetURI);
+    }
+    /**
+     * Move multiple files to one destination.
+     * @param sources - the files to move.
+     * @param targetURI - the destination path.
+     */
+    public void moveFilesToTarget(List<String> sources, String targetURI) {
+        if(sources.isEmpty()) return;
+        for(String s: sources) {
+            moveFile(s, targetURI);
+        }
+    }
+    /**
+     * Move multiple files to multiple targets.
+     * <p> Its not possible to move a single file to multiple targets.
+     * <p> This method will move the first source file to the first target destination, and will continue like that.
+     * @param sources - the list of files to move.
+     * @param targets - the list of destination directories.
+     */
+    public void moveFilesToTargets(List<String> sources, List<String> targets) {
+        if(sources.isEmpty()) return;
+        if(sources.size() != targets.size()) return;
+
+        for(int i = 0; i < sources.size(); i++) {
+            moveFile(sources.get(i), targets.get(i));
+        }
+    }
+    /**
      * search in the file lines for a particular word.
      * <p> the path that you provide must be of a file type.
      * @param fileURI - the file to read lines and search for the word.
      * @param word - the word to search in a file.
      */
-    public void sarchWordInFile(String fileURI, String word) {
+    public void searchWordInFile(String fileURI, String word) {
         File f = new File(fileURI);
         if(!f.isFile()) return;
         try(Stream<String> fileLines = TextUtils.getLazilyFileLines(fileURI)) {
@@ -172,7 +206,7 @@ public class FileOperation {
         if(paths.isEmpty()) return;
         for(Path p: paths) {
             if(p.toFile().isFile()) {
-                sarchWordInFile(p.toString(), word);
+                searchWordInFile(p.toString(), word);
             }
             System.out.println();
         }
