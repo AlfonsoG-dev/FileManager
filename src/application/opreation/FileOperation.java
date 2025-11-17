@@ -22,6 +22,33 @@ public class FileOperation {
         fileUtils = new FileUtils();
         textUtils = new TextUtils();
     }
+    public void createDirectory(String pathURI) {
+        if(fileUtils.createDirectory(pathURI)) {
+            System.out.println("[Info] Creating directory => " + pathURI);
+        }
+    }
+    public void createFile(String fileURI) {
+        if(fileUtils.createFile(fileURI)) {
+            System.out.println("[Info] Creating file => " + fileURI);
+        }
+    }
+
+    /**
+     * Deleted a directory.
+     * <p> If the directory contains files provide the prefix --r
+     * @param pathURI - the directory to delete.
+     * @param permission - the prefix to also delete the directory content.
+     */
+    public void deleteDirectory(String pathURI, String permission) {
+        boolean recursively = false;
+        if(!permission.isBlank() && permission.equals("--r")) recursively = true; 
+        if(!fileUtils.deleteDirectory(pathURI,recursively)) {
+            System.err.println("[Error] Can't delete this directory");
+        }
+        if(recursively == false) {
+            System.out.println("[Info] If the directory to delete contain files you must provide --r");
+        }
+    }
 
     /**
      * search in the file lines for a particular word.
