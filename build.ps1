@@ -1,4 +1,4 @@
-$srcClases = "src\application\*.java src\application\opreation\*.java src\application\utils\*.java "
+$srcClases = "src\application\*.java src\application\operation\*.java src\application\utils\*.java "
 $libFiles = ""
 $compile = "javac --release 23 -Xlint:all -Xdiags:verbose -d .\bin\ $srcClases"
 $createJar = "jar -ufe FileManager.jar application.FileManager -C .\bin\ ."

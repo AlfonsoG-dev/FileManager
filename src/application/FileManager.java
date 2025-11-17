@@ -9,9 +9,10 @@ class FileManager {
     public static void main(String[] args) {
         String localPath = "." + File.separator;
         FileOperation op = new FileOperation();
-        op.copyFilesToTargets(
-                Arrays.asList("bin/application/FileManager.class", "src/application/FileManager.java"),
-                Arrays.asList("docs", "lib")
+        op.copyDirsToTargets(
+                Arrays.asList("bin/application", "src/application"),
+                Arrays.asList("docs", "lib"),
+                "--r"
         );
     }
 }

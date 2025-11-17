@@ -101,7 +101,32 @@ public class FileOperation {
             copyFileToTargets(s, targets);
         }
     }
-
+    /**
+     * @param permission - if you copy immediate or recursively.
+     */
+    public void copyDir(String sourceURI, String targetURI, String permission) {
+        int level = 1;
+        if(!permission.isBlank() && permission.equals("--r")) level = 0;
+        fileUtils.copyDirToTarget(Paths.get(sourceURI), targetURI, level);
+    }
+    public void copyDirsToTarget(List<String> sources, String targetURI, String permission) {
+        if(sources.isEmpty()) return; 
+        for(String s: sources) {
+            copyDir(s, targetURI, permission);
+        }
+    }
+    public void copyDirToTargets(String sourceURI, List<String> targets, String permission) {
+        if(targets.isEmpty()) return; 
+        for(String t: targets) {
+            copyDir(sourceURI, t, permission);
+        }
+    }
+    public void copyDirsToTargets(List<String> sources, List<String> targets, String permission) {
+        if(sources.isEmpty()) return; 
+        for(String s: sources) {
+            copyDirToTargets(s, targets, permission);
+        }
+    }
     /**
      * search in the file lines for a particular word.
      * <p> the path that you provide must be of a file type.
