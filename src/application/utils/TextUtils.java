@@ -7,6 +7,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.LineNumberReader;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -58,6 +59,19 @@ public record TextUtils() {
         } catch(IOException e) {
             e.printStackTrace();
         }
+    }
+    public static int getLineNumber(String fileURI, String line) {
+        try(LineNumberReader reader = new LineNumberReader(new FileReader(new File(fileURI)))) {
+            String l;
+            while((l=reader.readLine()) != null) {
+                if(line.equals(l)) {
+                    return reader.getLineNumber();
+                }
+            }
+        } catch(IOException e) {
+            e.printStackTrace();
+        }
+        return 0;
     }
     /**
      * Determine if the line contains a specific word.
