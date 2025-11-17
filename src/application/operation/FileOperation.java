@@ -221,6 +221,27 @@ public class FileOperation {
         if(fileURI.isBlank() || targetURI.isBlank()) return;
         fileUtils.deCompressFile(fileURI, Paths.get(targetURI));
     }
+    public void printFileLines(String fileURI) {
+        String[] lines = TextUtils.getFileLines(fileURI).split("\n");
+        if(lines.length == 0) return;
+        for(int i=0; i<lines.length; ++i) {
+            String l = lines[i];
+            int c = i;
+            System.out.println(String.format("%d:%s", ++c, l));
+        }
+    }
+    public void printFileLines(String fileURI, int start, int stop) {
+        try (Stream<String> lazyLines = TextUtils.getLazilyFileLines(fileURI)) {
+            List<String> lines = lazyLines.toList();
+            stop = stop > 0 ? stop : lines.size();
+            for(int i=start; i<stop; ++i) {
+                int c = i;
+                System.out.println(String.format("%d:%s", ++c, lines.get(i)));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
     /**
      * search in the file lines for a particular word.
      * <p> the path that you provide must be of a file type.
