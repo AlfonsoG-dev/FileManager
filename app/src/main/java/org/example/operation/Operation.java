@@ -89,29 +89,41 @@ public class Operation {
      */
     public void deleteDirectory() {
         String fileURI = getPrefixValue("--dd");
-        int permission = getPrefixIndex("--r");
         if(fileURI == null) {
             System.out.println("[Warning] No path provided...");
             return;
         }
-        // TODO: implement the option to delete 1 or more directories.
-        if(permission != -1) {
-            fileOperation.deleteDirectory(fileURI, "--r");
-        } else {
-            fileOperation.deleteDirectory(fileURI, "");
+        int fileIndex = getPrefixIndex("--dd");
+        if(fileIndex == -1) return;
+        String p = "";
+        int permission = getPrefixIndex("--r");
+        if(permission != -1) p = "-re";
+        if((fileIndex+2) == arguments.length) {
+            fileOperation.deleteDirectory(fileURI, p);
+        } else if(!fileURI.equals(arguments[arguments.length-1])) {
+            for(int i=fileIndex+1; i<arguments.length; ++i) {
+                fileOperation.deleteDirectory(arguments[i], p);
+            }
         }
     }
     /**
      * Deletes a file given the prefix "--df path"
      */
     public void deleteFile() {
-        // TODO: implement the option to delete 1 or more files.
         String fileURI = getPrefixValue("--df");
         if(fileURI == null) {
             System.out.println("[Warning] No path provided...");
             return;
         }
-        fileOperation.deleteFile(fileURI);
+        int fileIndex = getPrefixIndex("--dd");
+        if(fileIndex == -1) return;
+        if((fileIndex+2) == arguments.length) {
+            fileOperation.deleteFile(fileURI);
+        } else if(!fileURI.equals(arguments[arguments.length-1])) {
+            for(int i=fileIndex+1; i<arguments.length; ++i) {
+                fileOperation.deleteFile(arguments[i]);
+            }
+        }
     }
     public void list() {
         String pathURI = getPrefixValue("--ls");
