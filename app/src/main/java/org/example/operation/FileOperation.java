@@ -65,7 +65,7 @@ public class FileOperation {
      * List a file content if its a directory.
      * <p> The content can be the immediate content  or recursively.
      * @param pathURI - the path to show its content.
-     * @param permission - the prefix to change immediate or recursively.
+     * @param permission - the prefix to change immediate "" or recursively "--r".
      */
     public void listContent(String pathURI, String permission) {
         int level = 1;

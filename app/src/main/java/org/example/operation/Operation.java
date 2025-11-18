@@ -87,4 +87,17 @@ public class Operation {
         }
         fileOperation.deleteFile(fileURI);
     }
+    public void list() {
+        String pathURI = getPrefixValue("--ls");
+        int permission = getPrefixIndex("--r");
+        if(pathURI == null) {
+            System.err.println("[Warning] No path provided...");
+            return;
+        }
+        if(permission != -1) {
+            fileOperation.listContent(pathURI, "--r");
+        } else {
+            fileOperation.listContent(pathURI, "");
+        }
+    }
 }
