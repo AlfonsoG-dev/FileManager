@@ -53,6 +53,15 @@ public class FileOperation {
         }
     }
     /**
+     * Deletes a file.
+     * @param fileURI - the file to delete.
+     */
+    public void deleteFile(String fileURI) {
+        if(!fileUtils.deleteFile(fileURI)) {
+            System.err.println("[Error] Can't delete this file");
+        }
+    }
+    /**
      * List a file content if its a directory.
      * <p> The content can be the immediate content  or recursively.
      * @param pathURI - the path to show its content.

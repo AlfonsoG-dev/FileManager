@@ -99,6 +99,15 @@ public class FileUtils {
         return true;
     }
     /**
+     * Deletes a file given the path.
+     * @param fileURI - the file to delete.
+     */
+    public boolean deleteFile(String fileURI) {
+        File f = new File(fileURI);
+        if(!f.isFile()) return false;
+        return f.delete();
+    }
+    /**
      * List directory content by level, if nested level is 0, it will search recursively.
      * @param pathURI - the path to list its content.
      * @param level - the nested level to reach.
