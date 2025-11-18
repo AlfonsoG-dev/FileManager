@@ -114,7 +114,11 @@ public class FileUtils {
     public boolean deleteFile(String fileURI) {
         File f = new File(fileURI);
         if(!f.isFile()) return false;
-        return f.delete();
+        if(f.delete()) {
+            System.out.println("[Info] Deleting file => " + f.toString());
+            return true;
+        }
+        return false;
     }
     /**
      * List directory content by level, if nested level is 0, it will search recursively.
