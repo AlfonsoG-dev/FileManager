@@ -14,6 +14,8 @@ public class App {
         Operation op = new Operation(args);
         for(String a: args) {
             switch(a) {
+                case "--ni" -> op.createFile();
+                case "--md" -> op.createDirectory();
                 case "--le" -> op.listEntries();
             }
         }

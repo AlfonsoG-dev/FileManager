@@ -40,9 +40,12 @@ public class FileUtils {
     public boolean createDirectory(String pathURI) {
         File f = new File(pathURI);
         if(f.isFile()) return false;
-        if(f.isDirectory() && f.exists()) return true;
-        if(f.toPath().getNameCount() > 2 && f.isDirectory()) return f.mkdirs();
-        return f.mkdir();
+        try {
+            return Files.createDirectory(f.toPath()) != null;
+        } catch(IOException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
     /**
      * creates a file it its not already created, if the file its in a nested structure created the directories first.

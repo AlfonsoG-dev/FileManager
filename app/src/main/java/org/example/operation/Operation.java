@@ -1,6 +1,7 @@
 package org.example.operation;
 
 import java.io.File;
+import java.nio.file.Files;
 
 public class Operation {
     private FileOperation fileOperation;
@@ -45,18 +46,21 @@ public class Operation {
      * <p> in case the user didn't provide a value a warning message its shown to them.
      * <p> this process will interrupt the execution if no value is present.
      */
-    public void create() {
+    public void createFile() {
+        String fileURI = getPrefixValue("--ni");
+        if(fileURI == null) {
+            System.out.println("[Warning] No path provided...");
+            return;
+        }
+        fileOperation.createFile(fileURI);
+    }
+    public void createDirectory() {
         String fileURI = getPrefixValue("--md");
         if(fileURI == null) {
             System.out.println("[Warning] No path provided...");
             return;
         }
-        File f = new File(fileURI);
-        if(f.isFile()) {
-            fileOperation.createFile(fileURI);
-        } else {
-            fileOperation.createDirectory(fileURI);
-        }
+        fileOperation.createDirectory(fileURI);
     }
     /**
      * Deletes a directory given the prefix "--dd path".
