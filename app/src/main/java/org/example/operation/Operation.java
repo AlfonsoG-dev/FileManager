@@ -100,4 +100,24 @@ public class Operation {
             fileOperation.listContent(pathURI, "");
         }
     }
+    public void copy() {
+        // TODO: implement copy multiple files to target or targets
+        String source = getPrefixValue("--cp");
+        String target = getPrefixValue("To");
+        if(source == null || target == null) {
+            System.err.println("[Error] No path provided...");
+            return;
+        }
+        fileOperation.copyFile(source, target);
+    }
+    public void move() {
+        // TODO: implement move multiple files to target or targets
+        String source = getPrefixValue("--mv");
+        String target = getPrefixValue("To");
+        if(source == null || target == null) {
+            System.err.println("[Error] No path provided...");
+            return;
+        }
+        fileOperation.moveFile(source, target);
+    }
 }
