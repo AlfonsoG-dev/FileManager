@@ -41,11 +41,15 @@ public class FileUtils {
         File f = new File(pathURI);
         if(f.isFile()) return false;
         try {
-            return Files.createDirectory(f.toPath()) != null;
+            Path p = Files.createDirectories(f.toPath());
+            if(p != null) {
+                System.out.println("[Info] Creating directory => " + getString.apply(p));
+                return true;
+            }
         } catch(IOException e) {
             e.printStackTrace();
-            return false;
         }
+        return false;
     }
     /**
      * creates a file it its not already created, if the file its in a nested structure created the directories first.
@@ -60,7 +64,7 @@ public class FileUtils {
                 Path parent = p.getParent();
                 if(parent != null) createDirectory(getString.apply(parent));
             }
-            System.out.println(String.format("[Info] Creating => %s", getString.apply(p)));
+            System.out.println(String.format("[Info] Creating file => %s", getString.apply(p)));
             return path2File.apply(p).createNewFile();
         } catch(IOException e) {
             e.printStackTrace();
@@ -162,7 +166,6 @@ public class FileUtils {
                 Path destination = targetPath.resolve(relative);
                 if(Files.isDirectory(p)) {
                     createDirectory(getString.apply(destination));
-                    System.out.println(String.format("[Info] Creating {%s}", getString.apply(destination)));
                 } else {
                     Path r = Files.copy(p, destination, StandardCopyOption.COPY_ATTRIBUTES);
                     System.out.println(String.format("[Info] Copy %s \n\tinto \t=>[%s]", p, r));
@@ -204,7 +207,6 @@ public class FileUtils {
                 Path destination = targetPath.resolve(relative);
                 if(Files.isDirectory(p)) {
                     createDirectory(getString.apply(destination));
-                    System.out.println(String.format("[Info] Creating {%s}", getString.apply(destination)));
                 } else {
                     Path r = Files.move(p, destination, StandardCopyOption.REPLACE_EXISTING);
                     System.out.println(String.format("[Info] Move %s \n\tinto \t=>[%s]", p, r));
