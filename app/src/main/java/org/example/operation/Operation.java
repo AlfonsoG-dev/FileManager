@@ -1,7 +1,7 @@
 package org.example.operation;
 
-import java.io.File;
-import java.nio.file.Files;
+import java.util.List;
+import java.util.ArrayList;
 
 public class Operation {
     private FileOperation fileOperation;
@@ -23,7 +23,7 @@ public class Operation {
     private int getPrefixIndex(String prefix) {
         for(int i=0; i<arguments.length; ++i) {
             String options = arguments[i];
-            if(options.contains(prefix)) {
+            if(options.equals(prefix)) {
                 return i;
             }
         }
@@ -106,14 +106,49 @@ public class Operation {
         }
     }
     public void copy() {
-        // TODO: implement copy multiple files to target or targets
+        // TODO: test me please.
         String source = getPrefixValue("--cp");
         String target = getPrefixValue("To");
         if(source == null || target == null) {
             System.err.println("[Error] No path provided...");
             return;
         }
-        fileOperation.copyFile(source, target);
+
+        int sourceIndex = getPrefixIndex("--cp");
+        int assignIndex = getPrefixIndex("To");
+        if(sourceIndex == -1 || assignIndex == -1) {
+            System.err.println("[Error] No arguments provided.");
+            return;
+        }
+        // means to copy one file to one target.
+        if((sourceIndex+2) == assignIndex && (assignIndex+2) == arguments.length) {
+            fileOperation.copyFile(source, target);
+        } else if((sourceIndex+2) != assignIndex && (assignIndex+2) == arguments.length) {
+            // means to copy multiple files to one target
+            List<String> sources = new ArrayList<>();
+            for(int i=sourceIndex+1; i<assignIndex; ++i) {
+                sources.add(arguments[i]);
+            }
+            fileOperation.copyFilesToTarget(sources, target);
+        } else if((sourceIndex+2) == assignIndex && (assignIndex+2) < arguments.length) {
+            // means to copy one file to multiple targets
+            List<String> targets = new ArrayList<>();
+            for(int i=assignIndex+1; i<arguments.length; ++i) {
+                targets.add(arguments[i]);
+            }
+            fileOperation.copyFileToTargets(source, targets);
+        } else if((sourceIndex+1) != assignIndex && (assignIndex+2) < arguments.length) {
+            // means to copy multiple files to multiple targets
+            List<String> sources = new ArrayList<>();
+            for(int i=sourceIndex+1; i<assignIndex; ++i) {
+                sources.add(arguments[i]);
+            }
+            List<String> targets = new ArrayList<>();
+            for(int i=assignIndex+1; i<arguments.length; ++i) {
+                targets.add(arguments[i]);
+            }
+            fileOperation.copyFilesToTargets(sources, targets);
+        }
     }
     public void move() {
         // TODO: implement move multiple files to target or targets
