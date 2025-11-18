@@ -16,6 +16,10 @@ public class App {
             switch(a) {
                 case "--ni" -> op.createFile();
                 case "--md" -> op.createDirectory();
+                case "--dd" -> op.deleteDirectory();
+                case "--df" -> op.deleteFile();
+                case "--ls" -> op.list();
+                case "--cp" -> op.copyFiles();
                 case "--le" -> op.listEntries();
             }
         }

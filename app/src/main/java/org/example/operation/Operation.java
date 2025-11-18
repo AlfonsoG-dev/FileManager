@@ -105,8 +105,14 @@ public class Operation {
             fileOperation.listContent(pathURI, "");
         }
     }
-    public void copy() {
-        // TODO: test me please.
+    /**
+     * Copy files.
+     * <p> Copy 1 file to 1 target: readme.md To docs
+     * <p> Copy 2 files to 1 target: readme.md example.txt To docs
+     * <p> Copy 1 file to 2 targets: readme.md To docs lib
+     * <p> Copy 2 files to 2 target: readme.md example.txt To docs lib
+     */
+    public void copyFiles() {
         String source = getPrefixValue("--cp");
         String target = getPrefixValue("To");
         if(source == null || target == null) {
@@ -124,6 +130,7 @@ public class Operation {
         if((sourceIndex+2) == assignIndex && (assignIndex+2) == arguments.length) {
             fileOperation.copyFile(source, target);
         } else if((sourceIndex+2) != assignIndex && (assignIndex+2) == arguments.length) {
+            System.out.println("here");
             // means to copy multiple files to one target
             List<String> sources = new ArrayList<>();
             for(int i=sourceIndex+1; i<assignIndex; ++i) {

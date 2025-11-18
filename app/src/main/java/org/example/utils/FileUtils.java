@@ -141,7 +141,7 @@ public class FileUtils {
      * @param targetURI - the path where to copy the source file.
      */
     public void copyFileToTarget(Path sourcePath, String targetURI) {
-        if(!path2File.apply(sourcePath).isFile() || !path2File.apply(sourcePath).exists()) return;
+        // if(!path2File.apply(sourcePath).isFile() || !path2File.apply(sourcePath).exists()) return;
         try {
             Path destination = Paths.get(targetURI).resolve(sourcePath.getFileName());
             Path result = Files.copy(sourcePath, destination, StandardCopyOption.COPY_ATTRIBUTES);
