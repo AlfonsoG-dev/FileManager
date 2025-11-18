@@ -3,7 +3,7 @@
  */
 package org.example;
 
-import org.example.operation.FileOperation;
+import org.example.operation.Operation;
 
 public class App {
     public String getGreeting() {
@@ -11,8 +11,11 @@ public class App {
     }
 
     public static void main(String[] args) {
-        FileOperation op = new FileOperation();
-
-        op.printFileLines("src/main/java/org/example/App.java", 9, 12);
+        Operation op = new Operation(args);
+        for(String a: args) {
+            switch(a) {
+                case "--le" -> op.listEntries();
+            }
+        }
     }
 }
