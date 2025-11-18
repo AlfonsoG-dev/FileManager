@@ -120,4 +120,12 @@ public class Operation {
         }
         fileOperation.moveFile(source, target);
     }
+    public void listEntries() {
+        String fileURI = getPrefixValue("--le");
+        if(fileURI == null) {
+            System.err.println("[Error] No path provided...");
+            return;
+        }
+        fileOperation.readCompressedFile(fileURI);
+    }
 }
