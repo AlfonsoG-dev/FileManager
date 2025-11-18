@@ -11,6 +11,7 @@ public class Operation {
     }
     public Operation(String[] arguments) {
         this.arguments = arguments;
+        this.fileOperation = new FileOperation();
     }
     /**
      * Get the index of a particular prefix.
