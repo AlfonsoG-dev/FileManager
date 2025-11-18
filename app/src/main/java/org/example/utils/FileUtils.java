@@ -64,12 +64,14 @@ public class FileUtils {
                 Path parent = p.getParent();
                 if(parent != null) createDirectory(getString.apply(parent));
             }
-            System.out.println(String.format("[Info] Creating file => %s", getString.apply(p)));
-            return path2File.apply(p).createNewFile();
+            if(path2File.apply(p).createNewFile()) {
+                System.out.println(String.format("[Info] Creating file => %s", getString.apply(p)));
+                return true;
+            }
         } catch(IOException e) {
             e.printStackTrace();
-            return false;
         }
+        return false;
     }
     /**
      * Deletes a directory if its empty, otherwise you must provide --r to delete it.
