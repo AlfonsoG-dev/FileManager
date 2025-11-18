@@ -1,6 +1,6 @@
-package application.operation;
+package org.example.operation;
 
-import application.utils.*;
+import org.example.utils.*;
 
 import java.util.stream.Stream;
 import java.util.List;
@@ -16,7 +16,7 @@ public class FileOperation {
     private FileUtils fileUtils;
     private TextUtils textUtils;
 
-    public FileOperation(FileUtils fileUtils) {
+    public FileOperation(FileUtils fileUtils, TextUtils textUtils) {
         this.fileUtils = fileUtils;
         this.textUtils = textUtils;
     }
