@@ -25,13 +25,13 @@ public class FileOperation {
         textUtils = new TextUtils();
     }
     public void createDirectory(String pathURI) {
-        if(fileUtils.createDirectory(pathURI)) {
-            System.out.println("[Info] Creating directory => " + pathURI);
+        if(!fileUtils.createDirectory(pathURI)) {
+            System.out.println("[Error] Couldn't create directory");
         }
     }
     public void createFile(String fileURI) {
-        if(fileUtils.createFile(fileURI)) {
-            System.out.println("[Info] Creating file => " + fileURI);
+        if(!fileUtils.createFile(fileURI)) {
+            System.err.println("[Error] Couldn't create file");
         }
     }
 
