@@ -42,8 +42,9 @@ public class Operation {
         return arguments[index+1];
     }
     /**
-     * Create a file or directory given the prefix "--md path".
-     * <p> in case the user didn't provide a value a warning message its shown to them.
+     * Create a file given the prefix "--ni path".
+     * <p> if more than 1 file is provide, this will create one by one, or will be interrupted if any of them is not a file.
+     * <p> in case the user didn't provided a value a warning message its shown to them.
      * <p> this process will interrupt the execution if no value is present.
      */
     public void createFile() {
@@ -52,15 +53,35 @@ public class Operation {
             System.out.println("[Warning] No path provided...");
             return;
         }
-        fileOperation.createFile(fileURI);
+        int fileIndex = getPrefixIndex("--ni");
+        if(fileIndex == -1) return;
+        if((fileIndex+2) == arguments.length) {
+            fileOperation.createFile(fileURI);
+        } else if(!fileURI.equals(arguments[arguments.length-1])) {
+            for(int i=fileIndex+1; i<arguments.length; ++i) {
+                fileOperation.createFile(arguments[i]);
+            }
+        }
     }
+    /**
+     * Create a directory given the prefix "--md path".
+     * <p> if more than 1 directory is provided, this will create one by one, or will be interrupted if any of them is not a file.
+     */
     public void createDirectory() {
         String fileURI = getPrefixValue("--md");
         if(fileURI == null) {
             System.out.println("[Warning] No path provided...");
             return;
         }
-        fileOperation.createDirectory(fileURI);
+        int fileIndex = getPrefixIndex("--md");
+        if(fileIndex == -1) return;
+        if((fileIndex+2) == arguments.length) {
+            fileOperation.createDirectory(fileURI);
+        } else if(!fileURI.equals(arguments[arguments.length-1])) {
+            for(int i=fileIndex+1; i<arguments.length; ++i) {
+                fileOperation.createDirectory(arguments[i]);
+            }
+        }
     }
     /**
      * Deletes a directory given the prefix "--dd path".
