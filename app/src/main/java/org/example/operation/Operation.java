@@ -237,6 +237,7 @@ public class Operation {
         }
     }
     public void moveFile() {
+        // TODO: test this.
         String source = getPrefixValue("--mvf");
         String target = getPrefixValue("To");
         if(source == null || target == null) {
@@ -273,6 +274,7 @@ public class Operation {
         }
     }
     public void moveDirs() {
+        // TODO: test this.
         String source = getPrefixValue("--mvd");
         String target = getPrefixValue("To");
         if(source == null || target == null) {
@@ -319,5 +321,43 @@ public class Operation {
             return;
         }
         fileOperation.readCompressedFile(fileURI);
+    }
+    public void compress() {
+        // TODO: test this.
+        String sourceURI = getPrefixValue("--cm");
+        String targetURI = getPrefixValue("To");
+        if(sourceURI == null || targetURI == null) {
+            System.err.println("[Error] No path provided...");
+            return;
+        }
+
+        String permission = getPrefixValue("--r");
+        if(permission == null) permission = "";
+        int indexSource = getPrefixIndex("--cm");
+        int assignIndex = getPrefixIndex("To");
+        if(indexSource == -1 || assignIndex == -1) return;
+        if((indexSource+2) == assignIndex && (assignIndex+2) == arguments.length) {
+            // compress one source into one target
+            fileOperation.compressPath(sourceURI, targetURI, permission);
+        } else if((indexSource+2) != assignIndex && (assignIndex+2) == arguments.length) {
+            // compress multiple sources into one target
+            for(int i=indexSource+1; i<assignIndex; ++i) {
+                fileOperation.compressPath(arguments[i], targetURI, permission);
+            }
+        } else if((indexSource+2) != assignIndex && !targetURI.equals(arguments[arguments.length-1])) {
+            // compress multiple source into multiple targets.
+            List<String> sources = new ArrayList<>();
+            for(int i=indexSource+1; i<assignIndex; ++i) {
+                sources.add(arguments[i]);
+            }
+            List<String> targets = new ArrayList<>();
+            for(int i=assignIndex+1; i<arguments.length; ++i) {
+                targets.add(arguments[i]);
+            }
+            if(sources.size() == targets.size()) return;
+            for(int i=0; i<sources.size(); ++i) {
+                fileOperation.compressPath(sources.get(i), targets.get(i), permission);
+            }
+        }
     }
 }
