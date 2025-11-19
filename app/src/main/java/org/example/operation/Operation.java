@@ -391,4 +391,26 @@ public class Operation {
             fileOperation.printFileLines(fileURI, start, stop);
         }
     }
+    /**
+     * Search for a word inside a file.
+     * <p> For now you have to provide the relative path of that file.
+     * <p> The search its ignore-case search.
+     * <p> If you provide more than 1 file the word will be searched inside those files. The result will be separated by end of line.
+     */
+    public void searchWord() {
+        String word = "--sf";
+        if(word == null && arguments.length < 2) {
+            System.err.println("[Error] No word or file provided to search");
+            return;
+        }
+        int wordIndex = getPrefixIndex("--sf");
+        if(arguments.length < 3) {
+            fileOperation.searchWordInFile(arguments[arguments.length-1], word);
+        } else if(arguments.length >= 3) {
+            for(int i=wordIndex+2; i<arguments.length; ++i) {
+                fileOperation.searchWordInFile(arguments[i], word);
+                System.out.println();
+            }
+        }
+    }
 }
