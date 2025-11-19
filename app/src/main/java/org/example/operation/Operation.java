@@ -351,8 +351,11 @@ public class Operation {
     }
     /**
      * Make a compressed file with a specific content given the path.
-     * <p> Using --cm you provide the path to compress.
-     * <p> To indicates the compressed file name to create.
+     * <p> You can compress one source to a single target - example: src To folder.zip.
+     * <p> You can compress multiple sources to a single target - example: src bin To folder.zip.
+     * <p> You can compress one source to multiple targets - example: src To folder.zip other.rar.
+     * <p> You can compress multiple sources to multiple targets - example: src bin To folder.zip other.rar.
+     * This will compress the first source into the first target and the rest will go in that order.
      */
     public void compress() {
         // TODO: test this.
@@ -389,6 +392,54 @@ public class Operation {
             if(sources.size() == targets.size()) return;
             for(int i=0; i<sources.size(); ++i) {
                 fileOperation.compressPath(sources.get(i), targets.get(i), permission);
+            }
+        }
+    }
+    /**
+     * De-compressed a file into a directory.
+     * <p> You can de-compress one source to a single target - example: folder.zip.
+     * <p> You can de-compress multiple sources to a single target - example: folder.zip other.rar To src.
+     * <p> You can de-compress one source to multiple targets - example: folder.zip To src docs.
+     * <p> You can de-compress multiple sources to multiple targets - example: folder.zip other.rar To src bin.
+     * This will de-compress the first source into the first target and the rest will go in that order.
+     */
+    public void deCompress() {
+        // TODO: test this.
+        String sourceURI = getPrefixValue("--dcm");
+        String targetURI = getPrefixValue("To");
+        if(sourceURI == null || targetURI == null) {
+            System.err.println("[Error] No path provided...");
+            return;
+        }
+        int indexSource = getPrefixIndex("--cm");
+        int assignIndex = getPrefixIndex("To");
+        if(indexSource == -1 || assignIndex == -1) return;
+        if((indexSource+2) == assignIndex && (assignIndex+2) == arguments.length) {
+            // de-compress one source to one target
+            fileOperation.deCompressFile(sourceURI, targetURI);
+        } else if((indexSource+2) != assignIndex && (assignIndex+2) == arguments.length) {
+            // de-compress multiple files into one target
+            for(int i=indexSource+1; i<assignIndex; ++i) {
+                fileOperation.deCompressFile(arguments[i], targetURI);
+            }
+        } else if((indexSource+2) == assignIndex && !targetURI.equals(arguments[arguments.length-1])) {
+            // de-compress one source into multiple targets.
+            for(int i=assignIndex+1; i<arguments.length; ++i) {
+                fileOperation.deCompressFile(sourceURI, arguments[i]);
+            }
+        } else if((indexSource+2) != assignIndex && !targetURI.equals(arguments[arguments.length-1]) ) {
+            // de-compress multiple source into multiple targets.
+            List<String> sources = new ArrayList<>();
+            for(int i=indexSource+1; i<assignIndex; ++i) {
+                sources.add(arguments[i]);
+            }
+            List<String> targets = new ArrayList<>();
+            for(int i=assignIndex+1; i<arguments.length; ++i) {
+                targets.add(arguments[i]);
+            }
+            if(sources.size() == targets.size()) return;
+            for(int i=0; i<sources.size(); ++i) {
+                fileOperation.deCompressFile(sources.get(i), targets.get(i));
             }
         }
     }
