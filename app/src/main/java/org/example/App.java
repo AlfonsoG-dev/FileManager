@@ -21,6 +21,8 @@ public class App {
                 case "--ls" -> op.list();
                 case "--cpf" -> op.copyFiles();
                 case "--cpd" -> op.copyDirs();
+                case "--mvf" -> op.moveFile();
+                case "--mvd" -> op.moveDirs();
                 case "--le" -> op.listEntries();
                 default -> System.out.println("Use --h to see the allowed command line operations");
             }

@@ -236,15 +236,81 @@ public class Operation {
             fileOperation.copyDirsToTargets(sources, targets, permission);
         }
     }
-    public void move() {
-        // TODO: implement move multiple files to target or targets
-        String source = getPrefixValue("--mv");
+    public void moveFile() {
+        String source = getPrefixValue("--mvf");
         String target = getPrefixValue("To");
         if(source == null || target == null) {
             System.err.println("[Error] No path provided...");
             return;
         }
-        fileOperation.moveFile(source, target);
+        int sourceIndex = getPrefixIndex("--mvf");
+        int assignIndex = getPrefixIndex("To");
+        if(sourceIndex == -1 || assignIndex == -1) {
+            System.err.println("[Error] No arguments provided.");
+            return;
+        }
+        // move one file to one target
+        if((sourceIndex+2) == assignIndex && (assignIndex+2) == arguments.length) {
+            fileOperation.moveFile(source, target);
+        } else if((sourceIndex+2) != assignIndex && (assignIndex+2) == arguments.length) {
+            // move multiple files to one target
+            List<String> sources = new ArrayList<>();
+            for(int i=sourceIndex+1; i<assignIndex; ++i) {
+                sources.add(arguments[i]);
+            }
+            fileOperation.moveFilesToTarget(sources, target);
+        } else if((sourceIndex+1) != assignIndex && (assignIndex+2) < arguments.length) {
+            // move multiple files to multiple targets
+            List<String> sources = new ArrayList<>();
+            for(int i=sourceIndex+1; i<assignIndex; ++i) {
+                sources.add(arguments[i]);
+            }
+            List<String> targets = new ArrayList<>();
+            for(int i=assignIndex+1; i<arguments.length; ++i) {
+                targets.add(arguments[i]);
+            }
+            fileOperation.moveFilesToTargets(sources, targets);
+        }
+    }
+    public void moveDirs() {
+        String source = getPrefixValue("--mvd");
+        String target = getPrefixValue("To");
+        if(source == null || target == null) {
+            System.err.println("[Error] No path provided...");
+            return;
+        }
+
+        String permission = getPrefixValue("--r");
+        if(permission == null) permission = "";
+
+        int sourceIndex = getPrefixIndex("--mvd");
+        int assignIndex = getPrefixIndex("To");
+        if(sourceIndex == -1 || assignIndex == -1) {
+            System.err.println("[Error] No arguments provided.");
+            return;
+        }
+        // move one file to one target
+        if((sourceIndex+2) == assignIndex && (assignIndex+2) == arguments.length) {
+            fileOperation.moveDir(source, target, permission);
+        } else if((sourceIndex+2) != assignIndex && (assignIndex+2) == arguments.length) {
+            // move multiple files to one target
+            List<String> sources = new ArrayList<>();
+            for(int i=sourceIndex+1; i<assignIndex; ++i) {
+                sources.add(arguments[i]);
+            }
+            fileOperation.moveDirsToTarget(sources, target, permission);
+        } else if((sourceIndex+1) != assignIndex && (assignIndex+2) < arguments.length) {
+            // move multiple files to multiple targets
+            List<String> sources = new ArrayList<>();
+            for(int i=sourceIndex+1; i<assignIndex; ++i) {
+                sources.add(arguments[i]);
+            }
+            List<String> targets = new ArrayList<>();
+            for(int i=assignIndex+1; i<arguments.length; ++i) {
+                targets.add(arguments[i]);
+            }
+            fileOperation.moveDirsToTargets(sources, targets, permission);
+        }
     }
     public void listEntries() {
         String fileURI = getPrefixValue("--le");
