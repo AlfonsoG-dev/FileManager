@@ -196,10 +196,8 @@ public class Operation {
     }
     /**
      * Copy directories.
-     * <p> Copy 1 directory to 1 target - example: bin To docs
-     * <p> Copy 2 directories to 1 target - example: bin lib To docs
-     * <p> Copy 1 directory to 2 targets - example: bin src To docs lib
-     * <p> Copy 2 directories to 2 target - example: bin src To docs lib
+     * <p> Copy 1 directory to 1 target - example: bin To docs.
+     * <p> Copy 2 files to 1 target - example: readme.md example.txt To docs.
      */
     public void copyDirs() {
         String source = getPrefixValue("--cpd");
@@ -208,43 +206,23 @@ public class Operation {
             System.err.println("[Error] No path provided...");
             return;
         }
-        String permission = getPrefixValue("--r");
-        if(permission == null) permission = "";
-
+        // fix: only one or multiple source to one target copies are allowed.
         int sourceIndex = getPrefixIndex("--cpd");
         int assignIndex = getPrefixIndex("To");
-        if(sourceIndex == -1 || assignIndex == -1) {
-            System.err.println("[Error] No arguments provided.");
-            return;
-        }
-        // copy directory to target
-        if((sourceIndex+1) == assignIndex && (assignIndex+2) == arguments.length) {
+        // recursively prefix
+        int p = getPrefixIndex("--r");
+        String permission = "";
+        if(sourceIndex == -1 || assignIndex == -1 || p == -1) return;
+        if(p != -1) permission = "--r";
+
+        // First from one source to one target
+        // TODO: test this.
+        if((sourceIndex+2) == assignIndex) {
             fileOperation.copyDir(source, target, permission);
-        } else if((sourceIndex+2) != assignIndex && (assignIndex+2) == arguments.length) {
-            // copy multiple directories to one target
-            List<String> sources = new ArrayList<>();
-            for(int i=sourceIndex+1; i<assignIndex; ++i) {
-                sources.add(arguments[i]);
+        } else if(!arguments[assignIndex-1].equals(source)) {
+            for(int i=sourceIndex+1; i<arguments.length; ++i) {
+                fileOperation.copyDir(arguments[i], target, permission);
             }
-            fileOperation.copyDirsToTarget(sources, target, permission);
-        } else if((sourceIndex+1) == assignIndex && (assignIndex+2) < arguments.length) {
-            // copy one directory to multiple targets
-            List<String> targets = new ArrayList<>();
-            for(int i=assignIndex+1; i<arguments.length; ++i) {
-                targets.add(arguments[i]);
-            }
-            fileOperation.copyDirToTargets(source, targets, permission);
-        } else if((sourceIndex+1) != assignIndex && (assignIndex+2) < arguments.length) {
-            // copy multiple directories to multiple targets
-            List<String> sources = new ArrayList<>();
-            for(int i=sourceIndex+1; i<assignIndex; ++i) {
-                sources.add(arguments[i]);
-            }
-            List<String> targets = new ArrayList<>();
-            for(int i=assignIndex+1; i<arguments.length; ++i) {
-                targets.add(arguments[i]);
-            }
-            fileOperation.copyDirsToTargets(sources, targets, permission);
         }
     }
     /**
@@ -294,7 +272,6 @@ public class Operation {
      * Move directories.
      * <p> Move 1 directory to 1 target - example: bin To docs.
      * <p> Move 2 directories to 1 target - example: bin lib To docs.
-     * <p> Move 2 directories to 2 target - example: bin src To docs lib.
      */
     public void moveDirs() {
         // TODO: test this.
@@ -305,8 +282,9 @@ public class Operation {
             return;
         }
 
-        String permission = getPrefixValue("--r");
-        if(permission == null) permission = "";
+        int p = getPrefixIndex("--r");
+        String permission = "";
+        if(p != -1) permission = "--r";
 
         int sourceIndex = getPrefixIndex("--mvd");
         int assignIndex = getPrefixIndex("To");
@@ -315,26 +293,12 @@ public class Operation {
             return;
         }
         // move one file to one target
-        if((sourceIndex+2) == assignIndex && (assignIndex+2) == arguments.length) {
+        if((sourceIndex+2) == assignIndex) {
             fileOperation.moveDir(source, target, permission);
-        } else if((sourceIndex+2) != assignIndex && (assignIndex+2) == arguments.length) {
-            // move multiple files to one target
-            List<String> sources = new ArrayList<>();
-            for(int i=sourceIndex+1; i<assignIndex; ++i) {
-                sources.add(arguments[i]);
+        } else if(!arguments[assignIndex-1].equals(source)) {
+            for(int i=sourceIndex+1; i<arguments.length; ++i) {
+                fileOperation.moveDir(arguments[i], target, permission);
             }
-            fileOperation.moveDirsToTarget(sources, target, permission);
-        } else if((sourceIndex+1) != assignIndex && (assignIndex+2) < arguments.length) {
-            // move multiple files to multiple targets
-            List<String> sources = new ArrayList<>();
-            for(int i=sourceIndex+1; i<assignIndex; ++i) {
-                sources.add(arguments[i]);
-            }
-            List<String> targets = new ArrayList<>();
-            for(int i=assignIndex+1; i<arguments.length; ++i) {
-                targets.add(arguments[i]);
-            }
-            fileOperation.moveDirsToTargets(sources, targets, permission);
         }
     }
     /**
