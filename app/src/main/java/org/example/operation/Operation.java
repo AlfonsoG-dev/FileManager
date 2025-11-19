@@ -443,4 +443,46 @@ public class Operation {
             }
         }
     }
+    /**
+     * Print a file lines given a path.
+     * <p> If you provide more than one file it will print the all the lines separated by file path.
+     */
+    public void printLines() {
+        String fileURI = getPrefixValue("--rl");
+        if(fileURI == null) {
+            System.err.println("[Error] No path provided...");
+            return;
+        }
+        int fileIndex = getPrefixIndex("--rl");
+        if(fileIndex == -1) return;
+        // read one file
+        if(fileURI.equals(arguments[arguments.length-1])) {
+            fileOperation.printFileLines(fileURI);
+        } else {
+            for(int i=fileIndex+1; i<arguments.length; ++i) {
+                System.out.println("[Info] File: " + arguments[i]);
+                fileOperation.printFileLines(arguments[i]);
+                System.out.println();
+            }
+        }
+    }
+    /**
+     * Print the file lines that are in range.
+     * <p> The range variate and can be from 0 to 1 - example: --rl execute.ps1 0:4
+     * <p> If the range ends with 0 it will mean that the lines to print are all - example: --rl execute 0:0
+     */
+    public void printLinesInRange() {
+        String fileURI = getPrefixValue("--rlr");
+        if(fileURI == null) {
+            System.err.println("[Error] No path provided...");
+            return;
+        }
+        // read one file
+        if(fileURI.equals(arguments[arguments.length-2]) && arguments[arguments.length-1].contains(":")) {
+            String range = arguments[arguments.length-1];
+            int start = Integer.parseInt(range.split(":")[0]);
+            int stop = Integer.parseInt(range.split(":")[1]);
+            fileOperation.printFileLines(fileURI, start, stop);
+        }
+    }
 }
