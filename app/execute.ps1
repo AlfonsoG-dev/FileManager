@@ -1,3 +1,3 @@
-$AssignEntry = "jar -ufe app\build\libs\app.jar org.example.App"
-$Command = "java -jar app\build\libs\app.jar"
+$AssignEntry = "jar -ufe build\libs\app.jar org.example.App"
+$Command = "java -jar build\libs\app.jar"
 Invoke-Expression ($AssignEntry + " && " + $Command )
