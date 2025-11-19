@@ -24,8 +24,10 @@ public class App {
                 case "--mvf" -> op.moveFile();
                 case "--mvd" -> op.moveDirs();
                 case "--le" -> op.listEntries();
+                case "--rl" -> op.printLines();
+                case "--rlr" -> op.printLinesInRange();
             }
         }
         System.out.println("Use --h to se the commands");
-    }
 }
+    }
