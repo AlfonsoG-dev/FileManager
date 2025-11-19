@@ -127,7 +127,7 @@ public class FileUtils {
      * @return the list with the path content without filtering directories or files.
      */
     public List<Path> listDirContent(String pathURI, int level) {
-        if (!(level > 0)) level = Integer.MAX_VALUE;
+        if (level <= 0) level = Integer.MAX_VALUE;
         try {
             return Files.walk(Paths.get(pathURI), level, FileVisitOption.FOLLOW_LINKS).toList();
         } catch(IOException e) {
@@ -251,10 +251,21 @@ public class FileUtils {
                 .stream()
                 .filter(Files::isRegularFile)
                 .toList();
+            if(paths.isEmpty()) {
+                System.err.println("[Error] Empty file provided");
+                return;
+            }
             for(Path p: paths) {
                 Path relative = sourcePath.relativize(p);
                 // replace "\\" with "/" by zip standards.
                 ZipEntry entry = new ZipEntry(getString.apply(relative).replace("\\", "/"));
+                System.out.println(
+                        String.format(
+                            "[Info] Adding %s to the compressed file %s",
+                            getString.apply(relative),
+                            getString.apply(targetPath)
+                        )
+                );
                 output.putNextEntry(entry);
                 // copy files into zip
                 Files.copy(p, output);
@@ -273,6 +284,7 @@ public class FileUtils {
         File f = new File(fileURI);
         if(!f.isFile() && !f.exists()) return;
         try(ZipFile z = new ZipFile(f)) {
+            System.out.println("[Info] Decompressing file...");
             Enumeration<? extends ZipEntry> zipEntries = z.entries();
             while(zipEntries.hasMoreElements()) {
                 ZipEntry entry = zipEntries.nextElement();
@@ -281,11 +293,10 @@ public class FileUtils {
                 if(!destination.startsWith(targetPath)) throw new IOException("Bad zip entry " + entry);
 
                 // create directory
-                if(entry.isDirectory()) {
-                    Path cd = Files.createDirectories(destination);
-                    if(cd == null) return;
+                Path parent = destination.getParent();
+                if(parent != null) {
+                    Path cd = Files.createDirectories(parent);
                     System.out.println("[Info] Creating directory \n\t=> " + cd);
-                    continue;
                 }
 
                 // extract file
