@@ -242,7 +242,8 @@ public class FileOperation {
     public void printFileLines(String fileURI, int start, int stop) {
         try (Stream<String> lazyLines = TextUtils.getLazilyFileLines(fileURI)) {
             List<String> lines = lazyLines.toList();
-            stop = stop > lines.size() || stop <= 0 ? lines.size() : stop;
+            stop = stop >= lines.size() || stop <= 0 ? lines.size() : stop;
+            start = start > 0 && start < stop ? start-1 : 0;
             for(int i=start; i<stop; ++i) {
                 int c = i;
                 System.out.println(String.format("%d:%s", ++c, lines.get(i)));
