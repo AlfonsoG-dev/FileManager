@@ -107,7 +107,8 @@ public class Operation {
         }
     }
     /**
-     * Deletes a file given the prefix "--df path"
+     * Deletes a file given the prefix "--df path".
+     * <p> If more than one file path to delete is present, it will delete multiple files.
      */
     public void deleteFile() {
         String fileURI = getPrefixValue("--df");
@@ -125,6 +126,9 @@ public class Operation {
             }
         }
     }
+    /**
+     * List the immediate content of a path unless the user provides --r to recursively list elements.
+     */
     public void list() {
         String pathURI = getPrefixValue("--ls");
         int permission = getPrefixIndex("--r");
@@ -140,10 +144,10 @@ public class Operation {
     }
     /**
      * Copy files.
-     * <p> Copy 1 file to 1 target: readme.md To docs
-     * <p> Copy 2 files to 1 target: readme.md example.txt To docs
-     * <p> Copy 1 file to 2 targets: readme.md To docs lib
-     * <p> Copy 2 files to 2 target: readme.md example.txt To docs lib
+     * <p> Copy 1 file to 1 target - example: readme.md To docs
+     * <p> Copy 2 files to 1 target - example: readme.md example.txt To docs
+     * <p> Copy 1 file to 2 targets - example: readme.md To docs lib
+     * <p> Copy 2 files to 2 target - example: readme.md example.txt To docs lib
      */
     public void copyFiles() {
         String source = getPrefixValue("--cpf");
@@ -190,6 +194,13 @@ public class Operation {
             fileOperation.copyFilesToTargets(sources, targets);
         }
     }
+    /**
+     * Copy directories.
+     * <p> Copy 1 directory to 1 target - example: bin To docs
+     * <p> Copy 2 directories to 1 target - example: bin lib To docs
+     * <p> Copy 1 directory to 2 targets - example: bin src To docs lib
+     * <p> Copy 2 directories to 2 target - example: bin src To docs lib
+     */
     public void copyDirs() {
         String source = getPrefixValue("--cpd");
         String target = getPrefixValue("To");
@@ -236,6 +247,12 @@ public class Operation {
             fileOperation.copyDirsToTargets(sources, targets, permission);
         }
     }
+    /**
+     * Move files.
+     * <p> Move 1 file to 1 target - example: readme.md To docs.
+     * <p> Move 2 files to 1 target - example: readme.md example.txt To docs.
+     * <p> Move 2 files to 2 target - example: readme.md example.txt To docs lib.
+     */
     public void moveFile() {
         // TODO: test this.
         String source = getPrefixValue("--mvf");
@@ -273,6 +290,12 @@ public class Operation {
             fileOperation.moveFilesToTargets(sources, targets);
         }
     }
+    /**
+     * Move directories.
+     * <p> Move 1 directory to 1 target - example: bin To docs.
+     * <p> Move 2 directories to 1 target - example: bin lib To docs.
+     * <p> Move 2 directories to 2 target - example: bin src To docs lib.
+     */
     public void moveDirs() {
         // TODO: test this.
         String source = getPrefixValue("--mvd");
@@ -314,6 +337,10 @@ public class Operation {
             fileOperation.moveDirsToTargets(sources, targets, permission);
         }
     }
+    /**
+     * If you provide a path to a compressed file it will show the file entries.
+     * <p> A file entries are the compressed content inside a zip file.
+     */
     public void listEntries() {
         String fileURI = getPrefixValue("--le");
         if(fileURI == null) {
@@ -322,6 +349,11 @@ public class Operation {
         }
         fileOperation.readCompressedFile(fileURI);
     }
+    /**
+     * Make a compressed file with a specific content given the path.
+     * <p> Using --cm you provide the path to compress.
+     * <p> To indicates the compressed file name to create.
+     */
     public void compress() {
         // TODO: test this.
         String sourceURI = getPrefixValue("--cm");
