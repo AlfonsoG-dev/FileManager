@@ -398,7 +398,7 @@ public class Operation {
      * <p> If you provide more than 1 file the word will be searched inside those files. The result will be separated by end of line.
      */
     public void searchWord() {
-        String word = "--sf";
+        String word = getPrefixValue("--sf");
         if(word == null && arguments.length < 2) {
             System.err.println("[Error] No word or file provided to search");
             return;
