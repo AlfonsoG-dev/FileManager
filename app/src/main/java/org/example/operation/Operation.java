@@ -397,7 +397,7 @@ public class Operation {
      * <p> The search its ignore-case search.
      * <p> If you provide more than 1 file the word will be searched inside those files. The result will be separated by end of line.
      */
-    public void searchWord() {
+    public void searchWordInFile() {
         String word = getPrefixValue("--sf");
         if(word == null && arguments.length < 2) {
             System.err.println("[Error] No word or file provided to search");
@@ -411,6 +411,25 @@ public class Operation {
                 fileOperation.searchWordInFile(arguments[i], word);
                 System.out.println();
             }
+        }
+    }
+    /**
+     * Search for a word inside a directory.
+     * <p> For now you have to provide the relative path of that directory.
+     * <p> The search its ignore-case search.
+     */
+    public void searchWordInDirectory() {
+        String word = getPrefixValue("--sd");
+        if(word == null && arguments.length < 2) {
+            System.err.println("[Error] No word or directory provided to search");
+            return;
+        }
+        int permission = getPrefixIndex("--r");
+        permission = permission != -1 ? 0:1;
+
+        int wordIndex = getPrefixIndex("--sd");
+        if((wordIndex+2) < arguments.length) {
+            fileOperation.searchWordInDirectory(arguments[wordIndex+2], word, permission);
         }
     }
 }
