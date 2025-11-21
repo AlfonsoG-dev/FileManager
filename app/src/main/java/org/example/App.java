@@ -28,6 +28,8 @@ public class App {
                 case "--dcm" -> op.deCompress();
                 case "--rl" -> op.printLines();
                 case "--rlr" -> op.printLinesInRange();
+                case "--sf" -> op.searchWordInFile();
+                case "--sd" -> op.searchWordInDirectory();
             }
         }
         System.out.println("Use --h to se the commands");
