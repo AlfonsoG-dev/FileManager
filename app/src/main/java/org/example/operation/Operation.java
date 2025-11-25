@@ -108,6 +108,7 @@ public class Operation {
             console.printf(CONSOLE_FORMAT, NO_PATH_WARNING);
             return;
         }
+        if(commandUtils.showHelpOnDeleteDirectory()) return;
         int fileIndex = getPrefixIndex("--dd");
         if(fileIndex == -1) return;
         String p = "";
@@ -131,6 +132,7 @@ public class Operation {
             console.printf(CONSOLE_FORMAT, "[Warning]", NO_PATH_WARNING);
             return;
         }
+        if(commandUtils.showHelpOnDeleteFile()) return;
         int fileIndex = getPrefixIndex("--dd");
         if(fileIndex == -1) return;
         if((fileIndex+2) == arguments.length) {

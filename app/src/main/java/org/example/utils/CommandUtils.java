@@ -24,7 +24,7 @@ public class CommandUtils {
         String prefix = "--ni";
         String value = getPrefixValue(prefix);
         StringBuilder help = new StringBuilder();
-        if(value != null && !value.equals("--h")) return false;
+        if(value == null || !value.equals("--h")) return false;
 
         help.append("Use --ni new.txt to create a new empty file.");
         help.append("\n\t");
@@ -46,7 +46,7 @@ public class CommandUtils {
         String prefix = "--md";
         String value = getPrefixValue(prefix);
         StringBuilder help = new StringBuilder();
-        if(value != null && !value.equals("--h")) return false;
+        if(value == null || !value.equals("--h")) return false;
 
         help.append("Use --md new-path to create a new empty directory.");
         help.append("\n\t");
@@ -59,6 +59,41 @@ public class CommandUtils {
         help.append(" => Use --md custom");
         help.append(File.separator);
         help.append("new-path to create the directory in the nested structure.");
+        console.printf(CONSOLE_FORMAT, help);
+
+        return true;
+    }
+    public boolean showHelpOnDeleteDirectory() {
+        String prefix = "--dd";
+        String value = getPrefixValue(prefix);
+        StringBuilder help = new StringBuilder();
+        if(value == null || !value.equals("--h")) return false;
+
+        help.append("Use --dd path to delete an empty directory.");
+        help.append("\n\t");
+        help.append("If you want to delete a directory that isn't empty");
+        help.append("\n\t");
+        help.append(" => Use --dd path --r to delete the directory and its content.");
+        help.append("\n\t");
+        help.append("If you want to delete multiple directories");
+        help.append("\n\t");
+        help.append(" => Use --dd path other-path --r to delete the directories and they're content.");
+        console.printf(CONSOLE_FORMAT, help);
+
+        return true;
+    }
+
+    public boolean showHelpOnDeleteFile() {
+        String prefix = "--df";
+        String value = getPrefixValue(prefix);
+        StringBuilder help = new StringBuilder();
+        if(value == null || !value.equals("--h")) return false;
+
+        help.append("Use --df path.txt to delete an empty file.");
+        help.append("\n\t");
+        help.append("If you want to delete multiple files");
+        help.append("\n\t");
+        help.append(" => Use --df path.txt other-path.txt to delete the files.");
         console.printf(CONSOLE_FORMAT, help);
 
         return true;
