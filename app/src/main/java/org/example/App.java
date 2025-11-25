@@ -30,8 +30,9 @@ public class App {
                 case "--rlr" -> op.printLinesInRange();
                 case "--sf" -> op.searchWordInFile();
                 case "--sd" -> op.searchWordInDirectory();
+                default -> System.console().printf("%s%n", "");
             }
         }
-        System.out.println("Use --h to se the commands");
+        System.console().printf("%s%n", "Use --h to se the commands");
     }
 }
