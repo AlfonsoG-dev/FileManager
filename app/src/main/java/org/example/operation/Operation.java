@@ -296,6 +296,7 @@ public class Operation {
     public void moveDirs() {
         // TODO: test this.
         String source = getPrefixValue("--mvd");
+        if(commandUtils.showHelpOnMoveDirectory()) return;
         String target = getPrefixValue("To");
         if(source == null || target == null) {
             console.printf(CONSOLE_FORMAT, NO_PATH_WARNING);

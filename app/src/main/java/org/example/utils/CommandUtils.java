@@ -177,4 +177,23 @@ public class CommandUtils {
 
         return true;
     }
+    public boolean showHelpOnMoveDirectory() {
+        String prefix = "--mvd";
+        String value = getPrefixValue(prefix);
+        if(value == null || !value.equals("--h")) return false;
+
+        StringBuilder help = new StringBuilder();
+        help.append("Use [--mvd path To other-path] to move the immediate directory into a destination.");
+        help.append("\n\t");
+        help.append("If you want to move all the content of the directory");
+        help.append("\n\t");
+        help.append(" => Use [--mvd path To destination --r] to move recursively a directory into a destination.");
+        help.append("\n\t");
+        help.append("If you want to move directories into a destination");
+        help.append("\n\t");
+        help.append(" => Use [--mvd path other-pat To destination --r] to move directories into a destination.");
+        console.printf(CONSOLE_FORMAT, help);
+
+        return true;
+    }
 }
