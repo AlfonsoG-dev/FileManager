@@ -156,4 +156,25 @@ public class CommandUtils {
 
         return true;
     }
+    public boolean showHelpOnMoveFile() {
+        String prefix = "--mvf";
+        String value = getPrefixValue(prefix);
+        if(value == null || !value.equals("--h")) return false;
+
+        StringBuilder help = new StringBuilder();
+        help.append("Use [--mvf path.txt To other-path] to move a file into a destination.");
+        help.append("\n\t");
+        help.append("If you want to move multiple files into a destination:");
+        help.append("\n\t");
+        help.append(" => Use [--mvf path.txt other-path.txt To destination] to move files into a destination.");
+        help.append("\n\t");
+        help.append("If you want to move multiple files into multiple destinations:");
+        help.append("\n\t");
+        help.append(" => Use [--mvf path.txt other-path.txt To destination other-destination] to move files into a destination.");
+        help.append("\n\t\t");
+        help.append(" => The first file is move to the first destination and the rest will follow that order.");
+        console.printf(CONSOLE_FORMAT, help);
+
+        return true;
+    }
 }
