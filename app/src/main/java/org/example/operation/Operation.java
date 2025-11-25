@@ -1,18 +1,31 @@
 package org.example.operation;
 
+import org.example.utils.CommandUtils;
+
 import java.util.List;
+import java.io.Console;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Operation {
+    private static final String NO_PATH_WARNING = "[Warning] No path provided...";
+    private static final String NO_ARGS_WARNING = "[Warning] No arguments provided";
+    private static Console console = System.console();
+    private static final String CONSOLE_FORMAT = "%s%n";
+
     private FileOperation fileOperation;
+    private CommandUtils commandUtils;
     private String[] arguments;
+
     public Operation(FileOperation fileOperation, String[] arguments) {
         this.fileOperation = fileOperation;
+        this.commandUtils = new CommandUtils(arguments);
         this.arguments = arguments;
     }
     public Operation(String[] arguments) {
         this.arguments = arguments;
         this.fileOperation = new FileOperation();
+        this.commandUtils = new CommandUtils(arguments);
     }
     /**
      * Get the index of a particular prefix.
@@ -50,9 +63,10 @@ public class Operation {
     public void createFile() {
         String fileURI = getPrefixValue("--ni");
         if(fileURI == null) {
-            System.out.println("[Warning] No path provided...");
+            console.printf(CONSOLE_FORMAT, NO_PATH_WARNING);
             return;
         }
+        if(commandUtils.showHelpOnCreateFile()) return;
         int fileIndex = getPrefixIndex("--ni");
         if(fileIndex == -1) return;
         if((fileIndex+2) == arguments.length) {
@@ -70,9 +84,10 @@ public class Operation {
     public void createDirectory() {
         String fileURI = getPrefixValue("--md");
         if(fileURI == null) {
-            System.out.println("[Warning] No path provided...");
+            console.printf(CONSOLE_FORMAT, NO_PATH_WARNING);
             return;
         }
+        if(commandUtils.showHelpOnCreateDirectory()) return;
         int fileIndex = getPrefixIndex("--md");
         if(fileIndex == -1) return;
         if((fileIndex+2) == arguments.length) {
@@ -90,7 +105,7 @@ public class Operation {
     public void deleteDirectory() {
         String fileURI = getPrefixValue("--dd");
         if(fileURI == null) {
-            System.out.println("[Warning] No path provided...");
+            console.printf(CONSOLE_FORMAT, NO_PATH_WARNING);
             return;
         }
         int fileIndex = getPrefixIndex("--dd");
@@ -113,7 +128,7 @@ public class Operation {
     public void deleteFile() {
         String fileURI = getPrefixValue("--df");
         if(fileURI == null) {
-            System.out.println("[Warning] No path provided...");
+            console.printf(CONSOLE_FORMAT, "[Warning]", NO_PATH_WARNING);
             return;
         }
         int fileIndex = getPrefixIndex("--dd");
@@ -133,7 +148,7 @@ public class Operation {
         String pathURI = getPrefixValue("--ls");
         int permission = getPrefixIndex("--r");
         if(pathURI == null) {
-            System.err.println("[Warning] No path provided...");
+            console.printf(CONSOLE_FORMAT, "[Warning]", NO_PATH_WARNING);
             return;
         }
         if(permission != -1) {
@@ -153,43 +168,42 @@ public class Operation {
         String source = getPrefixValue("--cpf");
         String target = getPrefixValue("To");
         if(source == null || target == null) {
-            System.err.println("[Error] No path provided...");
+            console.printf(CONSOLE_FORMAT, NO_ARGS_WARNING);
             return;
         }
 
         int sourceIndex = getPrefixIndex("--cpf");
         int assignIndex = getPrefixIndex("To");
         if(sourceIndex == -1 || assignIndex == -1) {
-            System.err.println("[Error] No arguments provided.");
+            console.printf(CONSOLE_FORMAT, NO_ARGS_WARNING);
             return;
         }
         // means to copy one file to one target.
         if((sourceIndex+2) == assignIndex && (assignIndex+2) == arguments.length) {
             fileOperation.copyFile(source, target);
         } else if((sourceIndex+2) != assignIndex && (assignIndex+2) == arguments.length) {
-            System.out.println("here");
             // means to copy multiple files to one target
             List<String> sources = new ArrayList<>();
             for(int i=sourceIndex+1; i<assignIndex; ++i) {
-                sources.add(arguments[i]);
+                sources = Arrays.asList(arguments[i]);
             }
             fileOperation.copyFilesToTarget(sources, target);
         } else if((sourceIndex+2) == assignIndex && (assignIndex+2) < arguments.length) {
             // means to copy one file to multiple targets
             List<String> targets = new ArrayList<>();
             for(int i=assignIndex+1; i<arguments.length; ++i) {
-                targets.add(arguments[i]);
+                targets = Arrays.asList(arguments[i]);
             }
             fileOperation.copyFileToTargets(source, targets);
         } else if((sourceIndex+1) != assignIndex && (assignIndex+2) < arguments.length) {
             // means to copy multiple files to multiple targets
             List<String> sources = new ArrayList<>();
             for(int i=sourceIndex+1; i<assignIndex; ++i) {
-                sources.add(arguments[i]);
+                sources = Arrays.asList(arguments[i]);
             }
             List<String> targets = new ArrayList<>();
             for(int i=assignIndex+1; i<arguments.length; ++i) {
-                targets.add(arguments[i]);
+                targets = Arrays.asList(arguments[i]);
             }
             fileOperation.copyFilesToTargets(sources, targets);
         }
@@ -203,7 +217,7 @@ public class Operation {
         String source = getPrefixValue("--cpd");
         String target = getPrefixValue("To");
         if(source == null || target == null) {
-            System.err.println("[Error] No path provided...");
+            console.printf(CONSOLE_FORMAT, NO_PATH_WARNING);
             return;
         }
         // fix: only one or multiple source to one target copies are allowed.
@@ -278,7 +292,7 @@ public class Operation {
         String source = getPrefixValue("--mvd");
         String target = getPrefixValue("To");
         if(source == null || target == null) {
-            System.err.println("[Error] No path provided...");
+            console.printf(CONSOLE_FORMAT, NO_PATH_WARNING);
             return;
         }
 
@@ -289,7 +303,7 @@ public class Operation {
         int sourceIndex = getPrefixIndex("--mvd");
         int assignIndex = getPrefixIndex("To");
         if(sourceIndex == -1 || assignIndex == -1) {
-            System.err.println("[Error] No arguments provided.");
+            console.printf(CONSOLE_FORMAT, NO_ARGS_WARNING);
             return;
         }
         // move one file to one target
@@ -308,7 +322,7 @@ public class Operation {
     public void listEntries() {
         String fileURI = getPrefixValue("--le");
         if(fileURI == null) {
-            System.err.println("[Error] No path provided...");
+            console.printf(CONSOLE_FORMAT, NO_PATH_WARNING);
             return;
         }
         fileOperation.readCompressedFile(fileURI);
@@ -321,7 +335,7 @@ public class Operation {
         String sourceURI = getPrefixValue("--cm");
         String targetURI = getPrefixValue("To");
         if(sourceURI == null || targetURI == null) {
-            System.err.println("[Error] No path provided...");
+            console.printf(CONSOLE_FORMAT, NO_PATH_WARNING);
             return;
         }
         if(arguments.length > 5) return;
@@ -343,11 +357,14 @@ public class Operation {
         String sourceURI = getPrefixValue("--dcm");
         String targetURI = getPrefixValue("To");
         if(sourceURI == null || targetURI == null) {
-            System.err.println("[Error] No path provided...");
+            console.printf(CONSOLE_FORMAT, NO_PATH_WARNING);
             return;
         }
         // TODO: make is possible to decompress to multiple targets or something similar.
-        fileOperation.deCompressFile(sourceURI, targetURI);
+        int assignIndex = getPrefixIndex("To");
+        if((assignIndex+2) == arguments.length) {
+            fileOperation.deCompressFile(sourceURI, targetURI);
+        }
     }
     /**
      * Print a file lines given a path.
@@ -356,7 +373,7 @@ public class Operation {
     public void printLines() {
         String fileURI = getPrefixValue("--rl");
         if(fileURI == null) {
-            System.err.println("[Error] No path provided...");
+            console.printf(CONSOLE_FORMAT, NO_PATH_WARNING);
             return;
         }
         int fileIndex = getPrefixIndex("--rl");
@@ -366,9 +383,9 @@ public class Operation {
             fileOperation.printFileLines(fileURI);
         } else {
             for(int i=fileIndex+1; i<arguments.length; ++i) {
-                System.out.println("[Info] File: " + arguments[i]);
+                console.printf("%s%n", "[Info] File: " + arguments[i]);
                 fileOperation.printFileLines(arguments[i]);
-                System.out.println();
+                console.printf("%s%n", "");
             }
         }
     }
@@ -380,7 +397,7 @@ public class Operation {
     public void printLinesInRange() {
         String fileURI = getPrefixValue("--rlr");
         if(fileURI == null) {
-            System.err.println("[Error] No path provided...");
+            console.printf(CONSOLE_FORMAT, NO_PATH_WARNING);
             return;
         }
         // read one file
@@ -400,7 +417,7 @@ public class Operation {
     public void searchWordInFile() {
         String word = getPrefixValue("--sf");
         if(word == null && arguments.length < 2) {
-            System.err.println("[Error] No word or file provided to search");
+            console.printf(CONSOLE_FORMAT, "[Error] No word or file provided to search");
             return;
         }
         int wordIndex = getPrefixIndex("--sf");
@@ -409,7 +426,7 @@ public class Operation {
         } else if(arguments.length >= 3) {
             for(int i=wordIndex+2; i<arguments.length; ++i) {
                 fileOperation.searchWordInFile(arguments[i], word);
-                System.out.println();
+                console.printf(CONSOLE_FORMAT, "");
             }
         }
     }
@@ -421,7 +438,7 @@ public class Operation {
     public void searchWordInDirectory() {
         String word = getPrefixValue("--sd");
         if(word == null && arguments.length < 2) {
-            System.err.println("[Error] No word or directory provided to search");
+            console.printf(CONSOLE_FORMAT, NO_PATH_WARNING);
             return;
         }
         int permission = getPrefixIndex("--r");
