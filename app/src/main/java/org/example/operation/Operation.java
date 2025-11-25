@@ -153,6 +153,7 @@ public class Operation {
             console.printf(CONSOLE_FORMAT, "[Warning]", NO_PATH_WARNING);
             return;
         }
+        if(commandUtils.showHelpOnList()) return;
         if(permission != -1) {
             fileOperation.listContent(pathURI, "--r");
         } else {

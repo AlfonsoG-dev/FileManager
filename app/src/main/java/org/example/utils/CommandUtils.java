@@ -98,4 +98,19 @@ public class CommandUtils {
 
         return true;
     }
+    public boolean showHelpOnList() {
+        String prefix = "--ls";
+        String value = getPrefixValue(prefix);
+        StringBuilder help = new StringBuilder();
+        if(value == null || !value.equals("--h")) return false;
+
+        help.append("Use --ls path to list the immediate content.");
+        help.append("\n\t");
+        help.append("If you want to see the total items on the path");
+        help.append("\n\t");
+        help.append(" => Use --ls path --r to recursively list the items.");
+        console.printf(CONSOLE_FORMAT, help);
+
+        return true;
 }
+    }
