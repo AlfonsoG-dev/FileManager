@@ -185,11 +185,11 @@ public class CommandUtils {
         StringBuilder help = new StringBuilder();
         help.append("Use [--mvd path To other-path] to move the immediate directory into a destination.");
         help.append("\n\t");
-        help.append("If you want to move all the content of the directory");
+        help.append("If you want to move all the content of the directory:");
         help.append("\n\t");
         help.append(" => Use [--mvd path To destination --r] to move recursively a directory into a destination.");
         help.append("\n\t");
-        help.append("If you want to move directories into a destination");
+        help.append("If you want to move directories into a destination:");
         help.append("\n\t");
         help.append(" => Use [--mvd path other-pat To destination --r] to move directories into a destination.");
         console.printf(CONSOLE_FORMAT, help);
@@ -215,7 +215,7 @@ public class CommandUtils {
         StringBuilder help = new StringBuilder();
         help.append("Use [--cm path to other.zip] to compress the immediate content of the path into a compressed file.");
         help.append("\n\t");
-        help.append("If you want include all the content into a compressed file");
+        help.append("If you want include all the content into a compressed file:");
         help.append("\n\t");
         help.append(" => Use [--cm path to other.zip --r] to compress recursively the content of the path into a compressed file.");
         console.printf(CONSOLE_FORMAT, help);
@@ -231,9 +231,24 @@ public class CommandUtils {
         StringBuilder help = new StringBuilder();
         help.append("Use [--dcm path.zip to other-path] to de-compress the content of the compressed file into a destination.");
         help.append("\n\t");
-        help.append("If you want include de-compressed multiple compressed files into a destination");
+        help.append("If you want include de-compressed multiple compressed files into a destination:");
         help.append("\n\t");
         help.append(" => Use [--dcm path.zip othet.zip to path] to de-compress the content of the compressed files into a destination.");
+        console.printf(CONSOLE_FORMAT, help);
+
+        return true;
+    }
+    public boolean showHelpOnPrintLines() {
+        String prefix = "--rl";
+        String value = getPrefixValue(prefix);
+        if(value == null || !value.equals("--h")) return false;
+
+        StringBuilder help = new StringBuilder();
+        help.append("Use [--rl path.txt] to read a file content");
+        help.append("\n\t");
+        help.append("If you want to read the content of multiple files:");
+        help.append("\n\t");
+        help.append(" => Use [--rl path.txt other.txt] to read the content of those files.");
         console.printf(CONSOLE_FORMAT, help);
 
         return true;

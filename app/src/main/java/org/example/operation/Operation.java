@@ -390,6 +390,7 @@ public class Operation {
             console.printf(CONSOLE_FORMAT, NO_PATH_WARNING);
             return;
         }
+        if(commandUtils.showHelpOnPrintLines()) return;
         int fileIndex = getPrefixIndex("--rl");
         if(fileIndex == -1) return;
         // read one file
