@@ -202,7 +202,38 @@ public class CommandUtils {
         if(value == null || !value.equals("--h")) return false;
 
         StringBuilder help = new StringBuilder();
-        help.append("Use [--le path] to read the compressed file entries.");
+        help.append("Use [--le path.zip] to read the compressed file entries.");
+        console.printf(CONSOLE_FORMAT, help);
+
+        return true;
+    }
+    public boolean showHelpOnCompress() {
+        String prefix = "--cm";
+        String value = getPrefixValue(prefix);
+        if(value == null || !value.equals("--h")) return false;
+
+        StringBuilder help = new StringBuilder();
+        help.append("Use [--cm path to other.zip] to compress the immediate content of the path into a compressed file.");
+        help.append("\n\t");
+        help.append("If you want include all the content into a compressed file");
+        help.append("\n\t");
+        help.append(" => Use [--cm path to other.zip --r] to compress recursively the content of the path into a compressed file.");
+        console.printf(CONSOLE_FORMAT, help);
+
+        return true;
+    }
+
+    public boolean showHelpOnDeCompress() {
+        String prefix = "--dcm";
+        String value = getPrefixValue(prefix);
+        if(value == null || !value.equals("--h")) return false;
+
+        StringBuilder help = new StringBuilder();
+        help.append("Use [--dcm path.zip to other-path] to de-compress the content of the compressed file into a destination.");
+        help.append("\n\t");
+        help.append("If you want include de-compressed multiple compressed files into a destination");
+        help.append("\n\t");
+        help.append(" => Use [--dcm path.zip othet.zip to path] to de-compress the content of the compressed files into a destination.");
         console.printf(CONSOLE_FORMAT, help);
 
         return true;

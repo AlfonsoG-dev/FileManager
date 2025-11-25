@@ -341,6 +341,7 @@ public class Operation {
      */
     public void compress() {
         String sourceURI = getPrefixValue("--cm");
+        if(commandUtils.showHelpOnCompress()) return;
         String targetURI = getPrefixValue("To");
         if(sourceURI == null || targetURI == null) {
             console.printf(CONSOLE_FORMAT, NO_PATH_WARNING);
@@ -363,15 +364,20 @@ public class Operation {
      */
     public void deCompress() {
         String sourceURI = getPrefixValue("--dcm");
+        if(commandUtils.showHelpOnDeCompress()) return;
         String targetURI = getPrefixValue("To");
         if(sourceURI == null || targetURI == null) {
             console.printf(CONSOLE_FORMAT, NO_PATH_WARNING);
             return;
         }
-        // TODO: make is possible to decompress to multiple targets or something similar.
+        // TODO: test this.
         int assignIndex = getPrefixIndex("To");
         if((assignIndex+2) == arguments.length) {
             fileOperation.deCompressFile(sourceURI, targetURI);
+        } else if(!arguments[arguments.length-2].equals("To")) {
+            for(int i=assignIndex+1; i<arguments.length; ++i) {
+                fileOperation.deCompressFile(sourceURI, arguments[i]);
+            }
         }
     }
     /**
