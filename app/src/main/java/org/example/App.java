@@ -6,12 +6,39 @@ package org.example;
 import org.example.operation.Operation;
 
 public class App {
+    protected static final String[] COMMANDS = {
+        "Use --ni command to create a file", 
+        "Use --md command to create a directory", 
+        "Use --dd command to delete a directory", 
+        "Use --df command to delete a file", 
+        "Use --ls command to list a path content", 
+        "Use --cpf command to copy a file", 
+        "Use --cpd command to copy a directory", 
+        "Use --mvf command to move a file", 
+        "Use --mvd command to move a directory", 
+        "Use --le command to list a compressed file entries", 
+        "Use --cm command to compress a path into a compressed file", 
+        "Use --dcm command to to de-compress a file into a path", 
+        "Use --rl command to read a file lines", 
+        "Use --rlr command to read a file lines on a specific range", 
+        "Use --sf command to search for a word in a file", 
+        "Use --sd command to search for a word in a directory" 
+    };
     public String getGreeting() {
         return "Hello World!";
     }
 
+    private static void showHelp(String[] args) {
+        if(args.length > 0 && args[0].equals("--h")) {
+            for(String c: COMMANDS) {
+                System.console().printf("%s%n", c);
+            }
+        }
+    }
+
     public static void main(String[] args) {
         Operation op = new Operation(args);
+        showHelp(args);
         for(String a: args) {
             switch(a) {
                 case "--ni" -> op.createFile();
@@ -33,6 +60,6 @@ public class App {
                 default -> System.console().printf("%s%n", "");
             }
         }
-        System.console().printf("%s%n", "Use --h to se the commands");
+        System.console().printf("%s%n", "Use --h to se the commands or use --h after the command to see how it works");
     }
 }
