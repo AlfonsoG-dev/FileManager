@@ -1,10 +1,11 @@
 package org.example.utils;
 
 import java.util.List;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Enumeration;
 import java.util.function.Function;
-
+import java.util.stream.Stream;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -26,11 +27,11 @@ public class FileUtils {
     /**
      * transform {@Path} to {@String}
      */
-    private Function<Path, String> getString = p -> p.toString();
+    private Function<Path, String> getString = Object::toString;
     /**
      * transform {@Path} to {@File}
      */
-    private Function<Path, File> path2File = p -> p.toFile();
+    private Function<Path, File> path2File = Path::toFile;
 
     /**
      * create a directories if they're not created.
@@ -128,12 +129,12 @@ public class FileUtils {
      */
     public List<Path> listDirContent(String pathURI, int level) {
         if (level <= 0) level = Integer.MAX_VALUE;
-        try {
-            return Files.walk(Paths.get(pathURI), level, FileVisitOption.FOLLOW_LINKS).toList();
+        try(Stream<Path> p = Files.walk(Paths.get(pathURI), level, FileVisitOption.FOLLOW_LINKS)) {
+            return p.toList();
         } catch(IOException e) {
             e.printStackTrace();
-            return null;
         }
+        return new ArrayList<>();
     }
     /**
      * Copy a file to a destination target.
@@ -141,7 +142,6 @@ public class FileUtils {
      * @param targetURI - the path where to copy the source file.
      */
     public void copyFileToTarget(Path sourcePath, String targetURI) {
-        // if(!path2File.apply(sourcePath).isFile() || !path2File.apply(sourcePath).exists()) return;
         try {
             Path destination = Paths.get(targetURI).resolve(sourcePath.getFileName());
             Path result = Files.copy(sourcePath, destination, StandardCopyOption.COPY_ATTRIBUTES);
@@ -310,5 +310,4 @@ public class FileUtils {
             e.printStackTrace();
         }
     }
-
 }
