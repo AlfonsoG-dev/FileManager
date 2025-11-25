@@ -136,5 +136,24 @@ public class CommandUtils {
         console.printf(CONSOLE_FORMAT, help);
 
         return true;
-}
     }
+    public boolean showHelpOnCopyDirectories() {
+        String prefix = "--cpd";
+        String value = getPrefixValue(prefix);
+        if(value == null || !value.equals("--h")) return false;
+
+        StringBuilder help = new StringBuilder();
+        help.append("Use [--cpd path To other-path] to copy the immediate content of the directory into the destination.");
+        help.append("\n\t");
+        help.append("If the directory has a nested structure:");
+        help.append("\n\t");
+        help.append(" => Use [--cpd path To other-path --r] to copy recursively the directory into the destination.");
+        help.append("\n\t");
+        help.append("If you want to copy multiple directories into one destination:");
+        help.append("\n\t");
+        help.append(" => Use [--cpd path other-directory To other-path --r] to copy the directories into the destination.");
+        console.printf(CONSOLE_FORMAT, help);
+
+        return true;
+    }
+}

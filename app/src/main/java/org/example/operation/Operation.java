@@ -215,11 +215,12 @@ public class Operation {
     /**
      * Copy directories.
      * <p> Copy 1 directory to 1 target - example: bin To docs.
-     * <p> Copy 2 files to 1 target - example: readme.md example.txt To docs.
+     * <p> Copy 2 files to 1 target - example: bin lib To docs.
      */
     public void copyDirs() {
         String source = getPrefixValue("--cpd");
         String target = getPrefixValue("To");
+        if(commandUtils.showHelpOnCopyDirectories()) return;
         if(source == null || target == null) {
             console.printf(CONSOLE_FORMAT, NO_PATH_WARNING);
             return;
