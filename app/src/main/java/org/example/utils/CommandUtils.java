@@ -253,4 +253,20 @@ public class CommandUtils {
 
         return true;
     }
+
+    public boolean showHelpOnPrintLinesInRange() {
+        String prefix = "--rlr";
+        String value = getPrefixValue(prefix);
+        if(value == null || !value.equals("--h")) return false;
+
+        StringBuilder help = new StringBuilder();
+        help.append("Use [--rlr path.txt 0:3] to read a file content on specific coordinates.");
+        help.append("\n\t");
+        help.append("If you want to read the entire file from a starting point:");
+        help.append("\n\t");
+        help.append(" => Use [--rlr path.txt 2:0] to read the entire file");
+        console.printf(CONSOLE_FORMAT, help);
+
+        return true;
+    }
 }

@@ -415,6 +415,7 @@ public class Operation {
             console.printf(CONSOLE_FORMAT, NO_PATH_WARNING);
             return;
         }
+        if(commandUtils.showHelpOnPrintLinesInRange()) return;
         // read one file
         if(fileURI.equals(arguments[arguments.length-2]) && arguments[arguments.length-1].contains(":")) {
             String range = arguments[arguments.length-1];
