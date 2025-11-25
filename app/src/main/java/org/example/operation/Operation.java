@@ -170,6 +170,7 @@ public class Operation {
     public void copyFiles() {
         String source = getPrefixValue("--cpf");
         String target = getPrefixValue("To");
+        if(commandUtils.showHelpOnCopyFiles()) return;
         if(source == null || target == null) {
             console.printf(CONSOLE_FORMAT, NO_ARGS_WARNING);
             return;
