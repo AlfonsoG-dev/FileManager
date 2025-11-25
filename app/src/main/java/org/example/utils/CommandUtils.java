@@ -196,4 +196,15 @@ public class CommandUtils {
 
         return true;
     }
+    public boolean showHelpOnListEntries() {
+        String prefix = "--le";
+        String value = getPrefixValue(prefix);
+        if(value == null || !value.equals("--h")) return false;
+
+        StringBuilder help = new StringBuilder();
+        help.append("Use [--le path] to read the compressed file entries.");
+        console.printf(CONSOLE_FORMAT, help);
+
+        return true;
+    }
 }

@@ -332,6 +332,7 @@ public class Operation {
             console.printf(CONSOLE_FORMAT, NO_PATH_WARNING);
             return;
         }
+        if(commandUtils.showHelpOnListEntries()) return;
         fileOperation.readCompressedFile(fileURI);
     }
     /**
