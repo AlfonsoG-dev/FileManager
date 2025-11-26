@@ -235,7 +235,6 @@ public class Operation {
         if(p != -1) permission = "--r";
 
         // First from one source to one target
-        // TODO: test this.
         if((sourceIndex+2) == assignIndex) {
             fileOperation.copyDir(source, target, permission);
         } else if(!arguments[assignIndex-1].equals(source)) {
@@ -252,30 +251,26 @@ public class Operation {
      */
     public void moveFile() {
         // TODO: test this.
-        String source = getPrefixValue("--mvf");
+        String prefix = "--mvf";
+        String source = getPrefixValue(prefix);
         if(commandUtils.showHelpOnMoveFile()) return;
         String target = getPrefixValue("To");
         if(source == null || target == null) {
             console.printf(CONSOLE_FORMAT, NO_PATH_WARNING);
             return;
         }
-        int sourceIndex = getPrefixIndex("--mvf");
+        int sourceIndex = getPrefixIndex(prefix);
         int assignIndex = getPrefixIndex("To");
         if(sourceIndex == -1 || assignIndex == -1) {
             console.printf(CONSOLE_FORMAT, NO_ARGS_WARNING);
             return;
         }
-        // move one file to one target
-        if((sourceIndex+2) == assignIndex && (assignIndex+2) == arguments.length) {
-            fileOperation.moveFile(source, target);
-        } else if((sourceIndex+2) != assignIndex && (assignIndex+2) == arguments.length) {
-            // move multiple files to one target
-            List<String> sources = new ArrayList<>();
+        // move one file to one target or multiple sources to 1 target.
+        if(arguments[assignIndex-2].equals(prefix)) {
             for(int i=sourceIndex+1; i<assignIndex; ++i) {
-                sources = Arrays.asList(arguments[i]);
+                fileOperation.moveFile(arguments[i], target);
             }
-            fileOperation.moveFilesToTarget(sources, target);
-        } else if((sourceIndex+1) != assignIndex && (assignIndex+2) < arguments.length) {
+        } else {
             // move multiple files to multiple targets
             List<String> sources = new ArrayList<>();
             for(int i=sourceIndex+1; i<assignIndex; ++i) {
