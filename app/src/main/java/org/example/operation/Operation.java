@@ -247,10 +247,8 @@ public class Operation {
      * Move files.
      * <p> Move 1 file to 1 target - example: readme.md To docs.
      * <p> Move 2 files to 1 target - example: readme.md example.txt To docs.
-     * <p> Move 2 files to 2 target - example: readme.md example.txt To docs lib.
      */
     public void moveFile() {
-        // TODO: test this.
         String prefix = "--mvf";
         String source = getPrefixValue(prefix);
         if(commandUtils.showHelpOnMoveFile()) return;
@@ -261,26 +259,13 @@ public class Operation {
         }
         int sourceIndex = getPrefixIndex(prefix);
         int assignIndex = getPrefixIndex("To");
-        if(sourceIndex == -1 || assignIndex == -1) {
-            console.printf(CONSOLE_FORMAT, NO_ARGS_WARNING);
-            return;
-        }
         // move one file to one target or multiple sources to 1 target.
-        if(arguments[assignIndex-2].equals(prefix)) {
+        if(arguments[assignIndex-1].equals(source) || !arguments[assignIndex-1].equals(source) && arguments.length-2 == assignIndex) {
             for(int i=sourceIndex+1; i<assignIndex; ++i) {
                 fileOperation.moveFile(arguments[i], target);
             }
         } else {
-            // move multiple files to multiple targets
-            List<String> sources = new ArrayList<>();
-            for(int i=sourceIndex+1; i<assignIndex; ++i) {
-                sources = Arrays.asList(arguments[i]);
-            }
-            List<String> targets = new ArrayList<>();
-            for(int i=assignIndex+1; i<arguments.length; ++i) {
-                targets = Arrays.asList(arguments[i]);
-            }
-            fileOperation.moveFilesToTargets(sources, targets);
+            console.printf(CONSOLE_FORMAT, "[Warning] Can't move file to multiple targets");
         }
     }
     /**

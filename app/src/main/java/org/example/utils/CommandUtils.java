@@ -168,11 +168,7 @@ public class CommandUtils {
         help.append("\n\t");
         help.append(" => Use [--mvf path.txt other-path.txt To destination] to move files into a destination.");
         help.append("\n\t");
-        help.append("If you want to move multiple files into multiple destinations:");
-        help.append("\n\t");
-        help.append(" => Use [--mvf path.txt other-path.txt To destination other-destination] to move files into a destination.");
-        help.append("\n\t\t");
-        help.append(" => The first file is move to the first destination and the rest will follow that order.");
+        help.append(" => NOTE: You can't move files into multiple destinations.");
         console.printf(CONSOLE_FORMAT, help);
 
         return true;
