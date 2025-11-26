@@ -436,6 +436,7 @@ public class Operation {
             console.printf(CONSOLE_FORMAT, "[Error] No word or file provided to search");
             return;
         }
+        if(commandUtils.showHelpOnSearchWordInFile()) return;
         int wordIndex = getPrefixIndex("--sf");
         if(arguments.length < 3) {
             fileOperation.searchWordInFile(arguments[arguments.length-1], word);

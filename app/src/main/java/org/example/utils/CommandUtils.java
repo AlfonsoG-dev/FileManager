@@ -264,7 +264,26 @@ public class CommandUtils {
         help.append("\n\t");
         help.append("If you want to read the entire file from a starting point:");
         help.append("\n\t");
-        help.append(" => Use [--rlr path.txt 2:0] to read the entire file");
+        help.append(" => Use [--rlr path.txt 2:0] to read the entire file.");
+        console.printf(CONSOLE_FORMAT, help);
+
+        return true;
+    }
+    public boolean showHelpOnSearchWordInFile() {
+        String prefix = "--sf";
+        String value = getPrefixValue(prefix);
+        if(value == null || !value.equals("--h")) return false;
+
+        StringBuilder help = new StringBuilder();
+        help.append("Use [--sf name path.txt] to search a word in a file.");
+        help.append("\n\t");
+        help.append("If you want to search the word in multiple files:");
+        help.append("\n\t");
+        help.append(" => Use [--sf name path.txt other.txt] to search a word in those files.");
+        console.printf(CONSOLE_FORMAT, help);
+
+        return true;
+    }
         console.printf(CONSOLE_FORMAT, help);
 
         return true;
