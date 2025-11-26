@@ -147,7 +147,7 @@ public class FileUtils {
             Path result = Files.copy(sourcePath, destination, StandardCopyOption.COPY_ATTRIBUTES);
             if(result != null) {
                 System.out.println(
-                        String.format("[Info] copy %s \n\tinto \t=>[%s]",
+                        String.format("[Info] copy %s %n\tinto \t=>[%s]",
                             getString.apply(sourcePath), getString.apply(result))
                 );
             }
@@ -174,7 +174,7 @@ public class FileUtils {
                     createDirectory(getString.apply(destination));
                 } else {
                     Path r = Files.copy(p, destination, StandardCopyOption.COPY_ATTRIBUTES);
-                    System.out.println(String.format("[Info] Copy %s \n\tinto \t=>[%s]", p, r));
+                    System.out.println(String.format("[Info] Copy %s %n\tinto \t=>[%s]", p, r));
                 }
             }
         } catch(Exception e) {
@@ -195,7 +195,7 @@ public class FileUtils {
             Path destination = Paths.get(targetURI).resolve(sourcePath.getFileName());
             Path result = Files.move(sourcePath, destination, StandardCopyOption.REPLACE_EXISTING);
             if(result != null) {
-                System.out.println(String.format("[Info] Move %s \n\tinto \t=>[%s]", sourcePath, result));
+                System.out.println(String.format("[Info] Move %s %n\tinto \t=>[%s]", sourcePath, result));
             }
         } catch(IOException e) {
             e.printStackTrace();
@@ -215,7 +215,7 @@ public class FileUtils {
                     createDirectory(getString.apply(destination));
                 } else {
                     Path r = Files.move(p, destination, StandardCopyOption.REPLACE_EXISTING);
-                    System.out.println(String.format("[Info] Move %s \n\tinto \t=>[%s]", p, r));
+                    System.out.println(String.format("[Info] Move %s %n\tinto \t=>[%s]", p, r));
                 }
             }
         } catch(IOException e) {
@@ -296,12 +296,12 @@ public class FileUtils {
                 Path parent = destination.getParent();
                 if(parent != null) {
                     Path cd = Files.createDirectories(parent);
-                    System.out.println("[Info] Creating directory \n\t=> " + cd);
+                    System.out.println("[Info] Creating directory %n\t=> " + cd);
                 }
 
                 // extract file
                 try(InputStream is = z.getInputStream(entry); OutputStream os = Files.newOutputStream(destination)) {
-                    System.out.println("[Info] Transferring files \n\tTo => " + destination);
+                    System.out.println("[Info] Transferring files %n\tTo => " + destination);
                     is.transferTo(os);
                 }
 

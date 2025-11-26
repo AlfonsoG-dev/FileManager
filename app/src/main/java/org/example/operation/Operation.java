@@ -178,38 +178,17 @@ public class Operation {
 
         int sourceIndex = getPrefixIndex("--cpf");
         int assignIndex = getPrefixIndex("To");
-        if(sourceIndex == -1 || assignIndex == -1) {
-            console.printf(CONSOLE_FORMAT, NO_ARGS_WARNING);
-            return;
-        }
         // means to copy one file to one target.
-        if((sourceIndex+2) == assignIndex && (assignIndex+2) == arguments.length) {
-            fileOperation.copyFile(source, target);
-        } else if((sourceIndex+2) != assignIndex && (assignIndex+2) == arguments.length) {
-            // means to copy multiple files to one target
-            List<String> sources = new ArrayList<>();
+        if(arguments[assignIndex-1].equals(source) || !arguments[assignIndex-1].equals(source) && arguments.length-2 == assignIndex) {
             for(int i=sourceIndex+1; i<assignIndex; ++i) {
-                sources = Arrays.asList(arguments[i]);
+                fileOperation.copyFile(arguments[i], target);
             }
-            fileOperation.copyFilesToTarget(sources, target);
-        } else if((sourceIndex+2) == assignIndex && (assignIndex+2) < arguments.length) {
-            // means to copy one file to multiple targets
-            List<String> targets = new ArrayList<>();
-            for(int i=assignIndex+1; i<arguments.length; ++i) {
-                targets = Arrays.asList(arguments[i]);
-            }
-            fileOperation.copyFileToTargets(source, targets);
-        } else if((sourceIndex+1) != assignIndex && (assignIndex+2) < arguments.length) {
-            // means to copy multiple files to multiple targets
-            List<String> sources = new ArrayList<>();
+        } else if(!arguments[assignIndex-1].equals(source) && arguments.length-2 > assignIndex) {
             for(int i=sourceIndex+1; i<assignIndex; ++i) {
-                sources = Arrays.asList(arguments[i]);
+                for(int j=assignIndex+1; j<arguments.length; ++j) {
+                    fileOperation.copyFile(arguments[i], arguments[j]);
+                }
             }
-            List<String> targets = new ArrayList<>();
-            for(int i=assignIndex+1; i<arguments.length; ++i) {
-                targets = Arrays.asList(arguments[i]);
-            }
-            fileOperation.copyFilesToTargets(sources, targets);
         }
     }
     /**
@@ -347,11 +326,10 @@ public class Operation {
             console.printf(CONSOLE_FORMAT, NO_PATH_WARNING);
             return;
         }
-        // TODO: test this.
         int assignIndex = getPrefixIndex("To");
-        if((assignIndex+2) == arguments.length) {
+        if(arguments[assignIndex-1].equals(sourceURI) && arguments.length-2 == assignIndex) {
             fileOperation.deCompressFile(sourceURI, targetURI);
-        } else if(!arguments[arguments.length-2].equals("To")) {
+        } else if(arguments[assignIndex-1].equals(sourceURI) && arguments.length-2 > assignIndex) {
             for(int i=assignIndex+1; i<arguments.length; ++i) {
                 fileOperation.deCompressFile(sourceURI, arguments[i]);
             }
