@@ -2,10 +2,7 @@ package org.example.operation;
 
 import org.example.utils.CommandUtils;
 
-import java.util.List;
 import java.io.Console;
-import java.util.ArrayList;
-import java.util.Arrays;
 
 public class Operation {
     private static final String NO_PATH_WARNING = "[Warning] No path provided...";
@@ -192,12 +189,24 @@ public class Operation {
         }
     }
     /**
+     * Helper method to copy from multiple sources to multiple targets.
+     */
+    private void copyMultipleSourceToTargetsDir(int sourceIndex, int assignIndex, String permission) {
+        for(int i=sourceIndex+1; i<assignIndex; ++i) {
+            for(int j=assignIndex+1; j<arguments.length; ++j) {
+                fileOperation.copyDir(arguments[i], arguments[j], permission);
+            }
+        }
+    }
+    /**
      * Copy directories.
      * <p> Copy 1 directory to 1 target - example: bin To docs.
      * <p> Copy 2 files to 1 target - example: bin lib To docs.
+     * <p> Copy 2 files to 2 targets - example: bin lib to docs other-path.
      */
     public void copyDirs() {
-        String source = getPrefixValue("--cpd");
+        String prefix = "--cpd";
+        String source = getPrefixValue(prefix);
         String target = getPrefixValue("To");
         if(commandUtils.showHelpOnCopyDirectories()) return;
         if(source == null || target == null) {
@@ -205,21 +214,18 @@ public class Operation {
             return;
         }
         // fix: only one or multiple source to one target copies are allowed.
-        int sourceIndex = getPrefixIndex("--cpd");
+        int sourceIndex = getPrefixIndex(prefix);
         int assignIndex = getPrefixIndex("To");
-        // recursively prefix
-        int p = getPrefixIndex("--r");
-        String permission = "";
-        if(sourceIndex == -1 || assignIndex == -1 || p == -1) return;
-        if(p != -1) permission = "--r";
+        String permission = getPrefixIndex("--r") != -1 ? "--r":"";
+        boolean targetCondition = (arguments.length-2 == assignIndex || arguments.length-3 == assignIndex);
 
         // First from one source to one target
-        if((sourceIndex+2) == assignIndex) {
-            fileOperation.copyDir(source, target, permission);
-        } else if(!arguments[assignIndex-1].equals(source)) {
-            for(int i=sourceIndex+1; i<arguments.length; ++i) {
+        if(arguments[assignIndex-1].equals(source) || !arguments[assignIndex-1].equals(source) && targetCondition) {
+            for(int i=sourceIndex+1; i<assignIndex; ++i) {
                 fileOperation.copyDir(arguments[i], target, permission);
             }
+        } else if(!arguments[assignIndex-1].equals(source) && !targetCondition) {
+            copyMultipleSourceToTargetsDir(sourceIndex, assignIndex, permission);
         }
     }
     /**
