@@ -4,14 +4,16 @@ import org.example.utils.*;
 
 import java.util.stream.Stream;
 import java.util.List;
-
+import java.io.Console;
 import java.io.File;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-// FIXME: use optional to avoid null or empty values.  
 public class FileOperation {
+
+    private static Console console = System.console();
+    private static final String CONSOLE_FORMAT = "%s%n"; 
 
     private FileUtils fileUtils;
     private TextUtils textUtils;
@@ -26,12 +28,12 @@ public class FileOperation {
     }
     public void createDirectory(String pathURI) {
         if(!fileUtils.createDirectory(pathURI)) {
-            System.out.println("[Error] Couldn't create directory");
+            console.printf(CONSOLE_FORMAT, "[Error] Couldn't create directory");
         }
     }
     public void createFile(String fileURI) {
         if(!fileUtils.createFile(fileURI)) {
-            System.err.println("[Error] Couldn't create file");
+            console.printf(CONSOLE_FORMAT, "[Error] Couldn't create file");
         }
     }
 
@@ -46,10 +48,10 @@ public class FileOperation {
         boolean recursively = false;
         if(!permission.isBlank() && permission.equals("--r")) recursively = true; 
         if(!fileUtils.deleteDirectory(pathURI,recursively)) {
-            System.err.println("[Error] Can't delete this directory");
+            console.printf(CONSOLE_FORMAT, "[Error] Can't delete this directory");
         }
         if(!recursively) {
-            System.out.println("[Info] If the directory to delete contain files you must provide --r");
+            console.printf(CONSOLE_FORMAT, "[Info] If the directory to delete contain files you must provide --r");
         }
     }
     /**
@@ -58,7 +60,7 @@ public class FileOperation {
      */
     public void deleteFile(String fileURI) {
         if(!fileUtils.deleteFile(fileURI)) {
-            System.err.println("[Error] Can't delete this file");
+            console.printf(CONSOLE_FORMAT, "[Error] Can't delete this file");
         }
     }
     /**
@@ -72,11 +74,11 @@ public class FileOperation {
         if(!permission.isBlank() && permission.equals("--r")) level = 0;
         List<Path> paths = fileUtils.listDirContent(pathURI, level);
         if(paths.isEmpty()) {
-            System.out.println("[Info] EMPTY");
+            console.printf(CONSOLE_FORMAT, "[Info] EMPTY");
             return;
         }
         for(Path p: paths) {
-            System.out.println(p);
+            console.printf(CONSOLE_FORMAT, p);
         }
     }
     /**
@@ -131,7 +133,7 @@ public class FileOperation {
         for(int i=0; i<lines.length; ++i) {
             String l = lines[i];
             int c = i;
-            System.out.println(String.format("%d:%s", ++c, l));
+            console.printf(CONSOLE_FORMAT, String.format("%d:%s", ++c, l));
         }
     }
     public void printFileLines(String fileURI, int start, int stop) {
@@ -141,7 +143,7 @@ public class FileOperation {
             start = start > 0 && start < stop ? start-1 : 0;
             for(int i=start; i<stop; ++i) {
                 int c = i;
-                System.out.println(String.format("%d:%s", ++c, lines.get(i)));
+                console.printf(CONSOLE_FORMAT, String.format("%d:%s", ++c, lines.get(i)));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -162,7 +164,7 @@ public class FileOperation {
                 String l = lines.get(i);
                 if(textUtils.lineContainsWord(l, word)) {
                     int lineNumber = i;
-                    System.out.println(String.format("%s:%d\t\t%s",fileURI, ++lineNumber, l));
+                    console.printf(CONSOLE_FORMAT, String.format("%s:%d\t\t%s",fileURI, ++lineNumber, l));
                 }
             }
         } catch(Exception e) {
@@ -185,7 +187,7 @@ public class FileOperation {
             if(p.toFile().isFile()) {
                 searchWordInFile(p.toString(), word);
             }
-            System.out.println();
+            console.printf(CONSOLE_FORMAT, "");
         }
     }
 
