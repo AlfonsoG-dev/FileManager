@@ -48,7 +48,7 @@ public class FileOperation {
         if(!fileUtils.deleteDirectory(pathURI,recursively)) {
             System.err.println("[Error] Can't delete this directory");
         }
-        if(recursively == false) {
+        if(!recursively) {
             System.out.println("[Info] If the directory to delete contain files you must provide --r");
         }
     }
@@ -86,66 +86,12 @@ public class FileOperation {
         fileUtils.copyFileToTarget(Paths.get(sourceURI), targetURI);
     }
     /**
-     * copy a file into a multiple destination directories.
-     */
-    public void copyFileToTargets(String sourceURI, List<String> targets) {
-        if(targets.isEmpty()) return;
-        for(String t: targets) {
-            copyFile(sourceURI, t);
-        }
-    }
-    /**
-     * copy multiple files into a destination directory.
-     */
-    public void copyFilesToTarget(List<String> sources, String targetURI) {
-        if(sources.isEmpty()) return;
-        for(String s: sources) {
-            copyFile(s, targetURI);
-        }
-    }
-    /**
-     * copy multiple files into multiple destination directories.
-     */
-    public void copyFilesToTargets(List<String> sources, List<String> targets) {
-        if(sources.isEmpty()) return;
-        for(String s: sources) {
-            copyFileToTargets(s, targets);
-        }
-    }
-    /**
      * @param permission - if you copy immediate or recursively.
      */
     public void copyDir(String sourceURI, String targetURI, String permission) {
         int level = 1;
         if(!permission.isBlank() && permission.equals("--r")) level = 0;
         fileUtils.copyDirToTarget(Paths.get(sourceURI), targetURI, level);
-    }
-    /**
-     * copy a multiple directories into a target.
-     */
-    public void copyDirsToTarget(List<String> sources, String targetURI, String permission) {
-        if(sources.isEmpty()) return; 
-        for(String s: sources) {
-            copyDir(s, targetURI, permission);
-        }
-    }
-    /**
-     * copy a directory into multiple targets.
-     */
-    public void copyDirToTargets(String sourceURI, List<String> targets, String permission) {
-        if(targets.isEmpty()) return; 
-        for(String t: targets) {
-            copyDir(sourceURI, t, permission);
-        }
-    }
-    /**
-     * copy multiple directories into multiple targets.
-     */
-    public void copyDirsToTargets(List<String> sources, List<String> targets, String permission) {
-        if(sources.isEmpty()) return; 
-        for(String s: sources) {
-            copyDirToTargets(s, targets, permission);
-        }
     }
     /**
      * Move a file to destination target.
@@ -165,31 +111,6 @@ public class FileOperation {
         int level = 1;
         if(!permission.isBlank() && permission.equals("--r")) level = 0;
         fileUtils.moveDirToTarget(Paths.get(sourceURI), targetURI, level);
-    }
-    /**
-     * Move multiple sources to a single target.
-     * @param sources - the list of sources to move. 
-     * @param targetURI - the target destination path.
-     * @param permission - to move immediate or recursively.
-     */
-    public void moveDirsToTarget(List<String> sources, String targetURI, String permission) {
-        if(sources.isEmpty()) return;
-        for(String s: sources) {
-            moveDir(targetURI, s, permission);
-        }
-    }
-    /**
-     * Move multiple source files to multiple target destinations.
-     * <p> You can't move a single file to multiple destinations, but in this method you move the first file to the first target, and in that order until the operation is completed.
-     * @param sources - the list of files to move.
-     * @param targets - the list of targets to receive the files.
-     * @param permission - if to move immediate or recursively.
-     */
-    public void moveDirsToTargets(List<String> sources, List<String> targets, String permission) {
-        if(sources.size() != targets.size()) return;
-        for(int i=0; i<sources.size(); ++i) {
-            moveDir(sources.get(i), targets.get(i), permission);
-        }
     }
     public void readCompressedFile(String fileURI) {
         // TODO: only compressed file types allowed
