@@ -193,7 +193,7 @@ public class Operation {
      */
     private void copyMultipleSourceToTargetsDir(int sourceIndex, int assignIndex, String permission) {
         for(int i=sourceIndex+1; i<assignIndex; ++i) {
-            for(int j=assignIndex+1; j<arguments.length; ++j) {
+            for(int j=assignIndex+1; j<arguments.length-1; ++j) {
                 fileOperation.copyDir(arguments[i], arguments[j], permission);
             }
         }
