@@ -274,8 +274,8 @@ public class Operation {
      * <p> Move 2 directories to 1 target - example: bin lib To docs.
      */
     public void moveDirs() {
-        // TODO: test this.
-        String source = getPrefixValue("--mvd");
+        String prefix = "--mvd";
+        String source = getPrefixValue(prefix);
         if(commandUtils.showHelpOnMoveDirectory()) return;
         String target = getPrefixValue("To");
         if(source == null || target == null) {
@@ -287,19 +287,16 @@ public class Operation {
         String permission = "";
         if(p != -1) permission = "--r";
 
-        int sourceIndex = getPrefixIndex("--mvd");
+        int sourceIndex = getPrefixIndex(prefix);
         int assignIndex = getPrefixIndex("To");
-        if(sourceIndex == -1 || assignIndex == -1) {
-            console.printf(CONSOLE_FORMAT, NO_ARGS_WARNING);
-            return;
-        }
+        boolean targetCondition = (arguments.length-2 == assignIndex || arguments.length-3 == assignIndex);
         // move one file to one target
-        if((sourceIndex+2) == assignIndex) {
-            fileOperation.moveDir(source, target, permission);
-        } else if(!arguments[assignIndex-1].equals(source)) {
-            for(int i=sourceIndex+1; i<arguments.length; ++i) {
+        if(arguments[assignIndex-1].equals(source) || !arguments[assignIndex-1].equals(source) && targetCondition) {
+            for(int i=sourceIndex+1; i<assignIndex; ++i) {
                 fileOperation.moveDir(arguments[i], target, permission);
             }
+        } else {
+            console.printf(CONSOLE_FORMAT, "[Warning] Can't move directory into multiple targets.");
         }
     }
     /**
