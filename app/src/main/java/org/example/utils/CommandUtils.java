@@ -244,7 +244,7 @@ public class CommandUtils {
         if(value == null || !value.equals("--h")) return false;
 
         StringBuilder help = new StringBuilder();
-        help.append("Use [--rl path.txt] to read a file content");
+        help.append("Use [--rl path.txt] to read a file content.");
         help.append("\n\t");
         help.append("If you want to read the content of multiple files:");
         help.append("\n\t");
@@ -284,6 +284,21 @@ public class CommandUtils {
 
         return true;
     }
+    public boolean showHelpOnSearchWordInDirectory() {
+        String prefix = "--sd";
+        String value = getPrefixValue(prefix);
+        if(value == null || !value.equals("--h")) return false;
+
+        StringBuilder help = new StringBuilder();
+        help.append("Use [--sd name path] to search a word in the immediate directory.");
+        help.append("\n\t");
+        help.append("If you want to search the word in all the files inside the path:");
+        help.append("\n\t");
+        help.append(" => Use [--sd name path --r] to search a word recursively in those files.");
+        help.append("\n\t");
+        help.append("If you want to search the word in multiple paths:");
+        help.append("\n\t");
+        help.append(" => Use [--sd name path other-path --r] to search a word in multiple paths");
         console.printf(CONSOLE_FORMAT, help);
 
         return true;

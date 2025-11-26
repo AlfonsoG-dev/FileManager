@@ -458,6 +458,7 @@ public class Operation {
             console.printf(CONSOLE_FORMAT, NO_PATH_WARNING);
             return;
         }
+        if(commandUtils.showHelpOnSearchWordInDirectory()) return;
         int permission = getPrefixIndex("--r");
         permission = permission != -1 ? 0:1;
 
